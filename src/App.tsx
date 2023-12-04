@@ -28,6 +28,7 @@ function App() {
   const alertClick = () => {
     WebApp.showAlert(`Hello World! Current count is ${count}`)
     console.log(WebApp.initData);
+    console.log(WebApp.initDataUnsafe);
   }
 
   const encrydata = encrypt(
