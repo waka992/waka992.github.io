@@ -12,7 +12,6 @@ function App() {
   const { connector, getWallets, connect } = useTonConnect();
   const { encrypt } = useEncrypt();
   const [count, setCount] = useState(0);
-  console.log(WebApp.initData);
   const wallets = getWallets();
   const connectWallet = () => {
     const walletConnectionSource = {
@@ -25,6 +24,11 @@ function App() {
       // update state/reactive variables to show updates in the ui
     });
   };
+
+  const alertClick = () => {
+    WebApp.showAlert(`Hello World! Current count is ${count}`)
+    console.log(WebApp.initData);
+  }
 
   const encrydata = encrypt(
     JSON.stringify({
@@ -52,8 +56,8 @@ function App() {
         <button onClick={connectWallet}>connect</button>
         <div className="card">
           <button
-            onClick={() =>
-              WebApp.showAlert(`Hello World! Current count is ${count}`)
+            onClick={
+              alertClick
             }
           >
             Show Alert
