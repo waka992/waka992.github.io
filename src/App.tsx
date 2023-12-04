@@ -1,5 +1,6 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
+import eruda from "eruda";
 
 import "./App.css";
 
@@ -11,7 +12,7 @@ function App() {
   const { connector, getWallets, connect } = useTonConnect();
   const { encrypt } = useEncrypt();
   const [count, setCount] = useState(0);
-  console.log(WebApp.initData)
+  console.log(WebApp.initData);
   const wallets = getWallets();
   const connectWallet = () => {
     const walletConnectionSource = {
@@ -28,7 +29,7 @@ function App() {
   const encrydata = encrypt(
     JSON.stringify({
       address:
-      "0:b458c58bb40e7ddd627717695cea84a9cbede9513f4b1d9fe503fe4b310963d9",
+        "0:b458c58bb40e7ddd627717695cea84a9cbede9513f4b1d9fe503fe4b310963d9",
       chain: "-239",
       payload: "123",
     })
@@ -36,6 +37,9 @@ function App() {
   console.log(encrydata);
   // 0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm
   console.log(wallets);
+
+  eruda.init();
+
   return (
     <>
       <div>
