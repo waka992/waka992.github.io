@@ -1,0 +1,216 @@
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  color: #ddd;
+  font-size: 14px;
+  font-weight: 600;
+  /*  base viewport 1280vw */
+  background-color: var(--main-bg-color);
+}
+
+body {
+  margin: 0;
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif; */
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Relative", sans-serif;
+  letter-spacing: 0.05rem;
+}
+
+input {
+  font-family: "RelativeNumber";
+}
+
+::-webkit-scrollbar {
+  width: 0.6vw;
+  height: 0.6vw;
+  border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 1.5vw;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b3b4c2;
+}
+
+:root {
+  --main-bg-color: #fcfcfc;
+  --base-color: #1A6BCB;
+  --black: #333;
+  --grey: #aaa;
+  --green: #48CB81;
+  --red: #F4465D;
+}
+
+.--ischange.up {
+    color: var(--green) !important;
+}
+
+.--ischange.down {
+    color: var(--red) !important;
+}
+
+a {
+  text-decoration: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input {
+  font-size: 12px;
+  color: white;
+  outline: none;
+  background: none;
+  border: none;
+  padding: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+button {
+  outline: none;
+  cursor: pointer;
+  border: none;
+}
+
+button:disabled,
+button.App-cta:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+  box-shadow: none;
+}
+
+table {
+  margin: 0;
+  padding: 0;
+}
+
+tr {
+  margin: 0;
+  padding: 0;
+}
+
+td {
+  margin: 0;
+  padding: 0;
+  padding-right: 0.465rem;
+}
+
+.border {
+  border: 1px solid rgba(0,0,0, 1);
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.muted {
+  opacity: 0.7;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.text-none {
+  text-transform: none;
+}
+
+.relative {
+  position: relative;
+}
+
+.margin-bottom {
+  margin-bottom: 0.465rem;
+}
+
+.transition-arrow {
+  vertical-align: middle;
+  margin-top: -0.31rem;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.display-inline {
+  display: inline;
+}
+
+.text-white {
+  color: white;
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+ul li {
+  padding-bottom: 1.5rem;
+}
+
+a.plain {
+  text-decoration: none;
+}
+

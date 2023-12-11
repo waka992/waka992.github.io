@@ -1,0 +1,9 @@
+.tabs {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tabs-info {
+    overflow: auto;
+}

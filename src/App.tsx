@@ -1,35 +1,31 @@
+// modules
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import eruda from "eruda";
-
-import "./App.css";
-
 import WebApp from "@twa-dev/sdk";
-import useTonConnect from "@/hooks/useTonConnect";
+import { Routes, Route, HashRouter } from "react-router-dom";
+
+// style
+import "./App.css";
+import "@/styles/Shared.css";
+
+// components
+import TopBar from "./pages/TopBar/TopBar";
+import HomePage from "./pages/HomePage/HomePage";
+import WalletPage from "./pages/WalletPage/WalletPage";
+import MarketPage from "./pages/MarketPage/MarketPage";
+import OrderPage from "./pages/OrderPage/OrderPage";
+
+// hooks
 import useEncrypt from "@/hooks/useEncrypt";
 
 function App() {
-  const { connector, getWallets, connect } = useTonConnect();
   const { encrypt } = useEncrypt();
   const [count, setCount] = useState(0);
-  const wallets = getWallets();
-  const connectWallet = () => {
-    const walletConnectionSource = {
-      jsBridgeKey: "tonkeeper",
-    };
-
-    connector.connect(walletConnectionSource);
-    const unsubscribe = connector.onStatusChange((walletInfo) => {
-      console.log(walletInfo);
-      // update state/reactive variables to show updates in the ui
-    });
-  };
 
   const alertClick = () => {
-    WebApp.showAlert(`Hello World! Current count is ${count}`)
-    console.log(WebApp.initData);
+    WebApp.showAlert(`Hello World! Current count is ${count}`);
     console.log(WebApp.initDataUnsafe);
-  }
+  };
 
   const encrydata = encrypt(
     JSON.stringify({
@@ -41,31 +37,22 @@ function App() {
   );
   console.log(encrydata);
   // 0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm
-  console.log(wallets);
 
   eruda.init();
 
   return (
-    <>
-      <div>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={connectWallet}>connect</button>
-        <div className="card">
-          <button
-            onClick={
-              alertClick
-            }
-          >
-            Show Alert
-          </button>
-        </div>
-      </div>
-    </>
+    <div className="App flex-column">
+      <HashRouter>
+        <TopBar />
+        <Routes>
+          <Route path={"/"} element={<HomePage />} />
+          <Route path={"/market"} element={<MarketPage />} />
+          <Route path={"/wallet"} element={<WalletPage />} />
+          <Route path={"/order"} element={<OrderPage />} />
+          {/* <Route path={"/auth"} element={<AuthPage />} /> */}
+        </Routes>
+      </HashRouter>
+    </div>
   );
 }
 

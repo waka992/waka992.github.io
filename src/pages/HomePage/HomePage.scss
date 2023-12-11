@@ -1,0 +1,18 @@
+.home-page {
+    padding-top: 20px;
+    overflow: hidden;
+    .intro {
+        width: 89.3333vw;
+        height: 170px;
+        border: 1px solid var(--base-color);
+        margin: 0 auto;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .quotes {
+        padding: 30px 5.3333vw 0;
+        overflow: hidden;
+        flex: 1;
+    }
+}

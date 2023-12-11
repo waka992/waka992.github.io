@@ -1,0 +1,45 @@
+.token-switch {
+    .token-area {
+        text-align: center;
+        color: var(--black);
+        font-size: 16px;
+
+        .exchange-icon,
+        .token-name {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .exchange-icon {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+.token-switch-drawer {
+    .contract-header {
+        font-size: 20px;
+    }
+
+    .token-list-title  {
+        justify-content: space-between;
+        color: var(--grey);
+        font-size: 12px;
+        padding: 4px 0;
+    }
+
+    .token-list-item {
+        justify-content: space-between;
+        padding: 4px 0;
+
+        .token-item-price-info {
+            text-align: right;
+        }
+
+        .token-item-change {
+            font-size: 10px;
+        }
+    }
+}

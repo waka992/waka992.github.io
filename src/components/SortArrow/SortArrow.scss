@@ -1,0 +1,25 @@
+.sort-arrow {
+    display: inline-block;
+    vertical-align: middle;
+
+    .arrow-top,
+    .arrow-down {
+        display: inline-block;
+        height: 12px;
+    }
+
+    .arrow-down {
+        margin-top: -10px;
+    }
+
+    .highlight-arrow {
+        color: var(--black);
+    }
+
+    .mute-arrow {
+        color: var(--grey);
+    }
+
+
+
+}

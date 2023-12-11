@@ -1,0 +1,129 @@
+.order-page {
+    padding: 0 10px;
+
+    .order-base-color {
+        color: var(--black);
+    }
+
+    .bottom-gap {
+        margin-bottom: 6px;
+    }
+
+    .order-token-control {
+        justify-content: space-between;
+        .order-token-control-left {
+
+        }
+
+        .order-token-control-right {
+            color: var(--black);
+            width: 23px;
+            height: 23px;
+        }
+    }
+ 
+
+    .order-info {
+        justify-content: space-between;
+
+        .lever-icon {
+            color: var(--grey);
+        }
+
+        .lever,.order-fee {
+            vertical-align: middle;
+        }
+
+        .order-fee {
+            text-align: right;
+            color: var(--grey);
+        }
+    }
+
+    .direction {
+        .direction-button {
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            background-color: #dedede;
+            color: #fff;
+
+            &.direction-left {
+                border-radius: 6px 0 0 6px;
+            }
+
+            &.direction-right {
+                border-radius: 0 6px 6px 0;
+            }
+
+            &.selected {
+                background-color: #FCD536;
+                color: var(--black);
+            }
+        }
+    }
+
+    .order-amount {
+        .avaiable-amount {
+            justify-content: space-between;
+            color: var(--grey);
+        }
+
+        .value-shortcut {
+            background-color: #efefef;
+            text-align: center;
+            color: #999;
+            height: 30px;
+            line-height: 30px;
+            font-size: 11px;
+        }
+    }
+
+    .balance {
+        color: var(--black);
+
+        .balance-trans {
+            color: #FCD536;
+        }
+    }
+
+    .slippage {
+        justify-content: space-between;
+        color: var(--grey);
+
+        .slippage-value,.slippage-icon {
+            vertical-align: middle;
+        }
+        .slippage-value {
+            margin-right: 4px;
+        }
+    }
+
+    .control-buttons {
+        .open-control {
+            justify-content: space-between;
+        }
+        .control-button {
+            width: 45vw;
+            border-radius: 4px;
+            text-align: center;
+            height: 42px;
+            color: #fff;
+
+            .button-text {
+                font-size: 16px;
+                letter-spacing: 0px;
+            }
+            .calculate-value {
+                font-size: 12px;
+                letter-spacing: 0px;
+            }
+        }
+        .button-green {
+            background-color: var(--green);
+        }
+        .button-red {
+            background-color: var(--red);
+        }
+    }
+}

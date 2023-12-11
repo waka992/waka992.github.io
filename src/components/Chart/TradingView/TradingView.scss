@@ -1,0 +1,12 @@
+.trading-view {
+    .trading-header {
+        .trading-time-option {
+            flex: 1;
+            color: var(--grey);
+
+            &.hl {
+                color: var(--black);
+            }
+        }
+    }
+}

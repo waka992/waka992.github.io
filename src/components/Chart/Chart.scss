@@ -1,0 +1,36 @@
+.chart {
+    padding: 10px;
+
+    .chart-container {
+        margin-top: 20px;
+        height: 380px
+    }
+
+    .operate-buttons {
+        justify-content: space-between;
+    }
+    .operate-button {
+        width: 45vw;
+        border-radius: 4px;
+        text-align: center;
+        height: 36px;
+        line-height: 36px;
+        color: #fff;
+
+        .button-text {
+            font-size: 16px;
+            letter-spacing: 0px;
+        }
+
+        .calculate-value {
+            font-size: 12px;
+            letter-spacing: 0px;
+        }
+    }
+    .button-green {
+        background-color: var(--green);
+    }
+    .button-red {
+        background-color: var(--red);
+    }
+}

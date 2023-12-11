@@ -1,0 +1,64 @@
+.wallet {
+    position: relative;
+    border-radius: 24px;
+    width: 100%;
+    background-color: #000;
+    padding: 18px;
+
+    .address-box,.balance-box,.balance-detail-box {
+        margin-bottom: 18px;
+    }
+
+    .address-box {
+        .address {
+            color: var(--base-color);
+            vertical-align: middle;
+            margin-right: 10px;
+            font-size: 12px;
+        }
+        .copy-icon {
+            vertical-align: middle;
+        }
+    }
+
+    .visible-icon {
+        position: absolute;
+        right: 35px;
+        top: 25px;
+        vertical-align: middle;
+        color: #666;
+    }
+
+    .balance-box {
+        .balance {
+            font-size: 34px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+      
+    }
+
+    .balance-detail-box {
+        font-size: 10px;
+        justify-content: space-between;
+
+        .freeze-balance-box {
+            width: 154px;
+        }
+        .surplus-desc,.freeze-desc {
+            margin-right: 10px;
+        }
+        .surplus-value,.freeze-value {
+            font-weight: 900;
+        }
+    }
+
+    .operate-btn {
+        text-align: center;
+
+        .button-icon {
+            margin-right: 4px;
+        }
+    }
+}
