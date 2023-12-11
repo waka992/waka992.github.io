@@ -17,7 +17,7 @@ const HomePage = () => {
     <div className="home-page flex-column">
       <div className="intro"></div>
       <div className="quotes flex-column">
-        <ToggleButtonGroup
+        {/* <ToggleButtonGroup
           value={typeValue}
           color="primary"
           exclusive
@@ -26,7 +26,7 @@ const HomePage = () => {
           <ToggleButton value="T20">TON-20</ToggleButton>
           <ToggleButton value="T20A">TON-20A</ToggleButton>
           <ToggleButton value="T20L">TON-20L</ToggleButton>
-        </ToggleButtonGroup>
+        </ToggleButtonGroup> */}
 
         <QuoteInfo />
       </div>

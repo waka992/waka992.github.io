@@ -2,7 +2,7 @@
 import { useState } from "react";
 import eruda from "eruda";
 import WebApp from "@twa-dev/sdk";
-import { Routes, Route, HashRouter } from "react-router-dom";
+import { Routes, Route, HashRouter, Navigate } from "react-router-dom";
 
 // style
 import "./App.css";
@@ -49,6 +49,7 @@ function App() {
           <Route path={"/market"} element={<MarketPage />} />
           <Route path={"/wallet"} element={<WalletPage />} />
           <Route path={"/order"} element={<OrderPage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
           {/* <Route path={"/auth"} element={<AuthPage />} /> */}
         </Routes>
       </HashRouter>
