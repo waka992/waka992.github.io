@@ -14,7 +14,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import WalletPage from "./pages/WalletPage/WalletPage";
 import MarketPage from "./pages/MarketPage/MarketPage";
 import OrderPage from "./pages/OrderPage/OrderPage";
-
+import { TonConnectUIProvider } from "@tonconnect/ui-react";
 // hooks
 import useEncrypt from "@/hooks/useEncrypt";
 
@@ -42,17 +42,19 @@ function App() {
 
   return (
     <div className="App flex-column">
-      <HashRouter>
-        <TopBar />
-        <Routes>
-          <Route path={"/"} element={<HomePage />} />
-          <Route path={"/market"} element={<MarketPage />} />
-          <Route path={"/wallet"} element={<WalletPage />} />
-          <Route path={"/order"} element={<OrderPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-          {/* <Route path={"/auth"} element={<AuthPage />} /> */}
-        </Routes>
-      </HashRouter>
+      <TonConnectUIProvider manifestUrl="https://waka992.github.io/docs/tonconnect-manifest.json">
+        <HashRouter>
+          <TopBar />
+          <Routes>
+            <Route path={"/"} element={<HomePage />} />
+            <Route path={"/market"} element={<MarketPage />} />
+            <Route path={"/wallet"} element={<WalletPage />} />
+            <Route path={"/order"} element={<OrderPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* <Route path={"/auth"} element={<AuthPage />} /> */}
+          </Routes>
+        </HashRouter>
+      </TonConnectUIProvider>
     </div>
   );
 }

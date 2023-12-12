@@ -2,9 +2,9 @@ import React from "react";
 import Button from "@mui/material/Button";
 import "./ConnectButton.scss";
 import { isWalletInfoCurrentlyEmbedded, WalletInfoCurrentlyEmbedded } from '@tonconnect/sdk';
+import { TonConnectButton } from '@tonconnect/ui-react';
 // hook
 import useTonConnect from "@/hooks/useTonConnect";
-
 const ConnectButton = () => {
   const { connector, getWallets, connect } = useTonConnect();
   const walletsList: any = getWallets();
@@ -33,6 +33,7 @@ const ConnectButton = () => {
 
   return (
     <div className="connect-button">
+      <TonConnectButton />
       <Button size="small" variant="contained" onClick={connectWallet}>
         Connect
       </Button>
