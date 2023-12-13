@@ -3,6 +3,7 @@ import { useState } from "react";
 import eruda from "eruda";
 import WebApp from "@twa-dev/sdk";
 import { Routes, Route, HashRouter, Navigate } from "react-router-dom";
+import GlobalContext from "@/store/global-context";
 
 // style
 import "./App.css";
@@ -17,8 +18,18 @@ import OrderPage from "./pages/OrderPage/OrderPage";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 // hooks
 import useEncrypt from "@/hooks/useEncrypt";
+//hoc
+import WithWebsocket from "@/hoc/withWebsocket.tsx";
 
-function App() {
+function App(props) {
+  const {
+    sendMessage,
+    sendJsonMessage,
+    lastMessage,
+    lastJsonMessage,
+    readyState,
+    getWebSocket,
+  } = props;
   const { encrypt } = useEncrypt();
   const [count, setCount] = useState(0);
 
@@ -35,28 +46,41 @@ function App() {
       payload: "123",
     })
   );
-  console.log(encrydata);
+  // console.log(encrydata);
   // 0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm
 
   eruda.init();
 
   return (
     <div className="App flex-column">
-      <TonConnectUIProvider manifestUrl="https://waka992.github.io/docs/tonconnect-manifest.json">
-        <HashRouter>
-          <TopBar />
-          <Routes>
-            <Route path={"/"} element={<HomePage />} />
-            <Route path={"/market"} element={<MarketPage />} />
-            <Route path={"/wallet"} element={<WalletPage />} />
-            <Route path={"/order"} element={<OrderPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-            {/* <Route path={"/auth"} element={<AuthPage />} /> */}
-          </Routes>
-        </HashRouter>
-      </TonConnectUIProvider>
+      <GlobalContext.Provider
+        value={{
+          sendMessage,
+          sendJsonMessage,
+          lastMessage,
+          lastJsonMessage,
+          readyState,
+          getWebSocket,
+        }}
+      >
+        <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/waka992/waka992.github.io/master/docs/tonconnect-manifest.json">
+          <HashRouter>
+            <TopBar />
+            <Routes>
+              <Route path={"/"} element={<HomePage />} />
+              <Route path={"/market"} element={<MarketPage />} />
+              <Route path={"/wallet"} element={<WalletPage />} />
+              <Route path={"/order"} element={<OrderPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* <Route path={"/auth"} element={<AuthPage />} /> */}
+            </Routes>
+          </HashRouter>
+        </TonConnectUIProvider>
+      </GlobalContext.Provider>
     </div>
   );
 }
 
-export default App;
+const WSapp = WithWebsocket(App);
+
+export default WSapp;

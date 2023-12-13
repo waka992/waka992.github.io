@@ -1,5 +1,19 @@
 .connect-button {
     position: absolute;
-    right: 16vw;
-    top: 18px;
+    right: 9vw;
+    top: 12px;
+    .ton-button {
+        transform: scale(0.6);
+        
+        button {
+
+            div {
+                // font-size: 10px !important;
+            }
+        }
+    }
+}
+
+tc-root[data-tc-dropdown-container] {
+    transform: scale(0.6) translateX(50%) translateY(-30%);
 }

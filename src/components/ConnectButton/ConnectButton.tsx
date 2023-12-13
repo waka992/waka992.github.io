@@ -1,42 +1,52 @@
-import React from "react";
-import Button from "@mui/material/Button";
+import React, { useEffect } from "react";
+import WebApp from "@twa-dev/sdk";
+
 import "./ConnectButton.scss";
-import { isWalletInfoCurrentlyEmbedded, WalletInfoCurrentlyEmbedded } from '@tonconnect/sdk';
-import { TonConnectButton } from '@tonconnect/ui-react';
+import {
+  TonConnectButton,
+  useTonAddress,
+  useTonConnectUI,
+  useTonWallet,
+} from "@tonconnect/ui-react";
+import useEncrypt from "@/hooks/useEncrypt";
+
 // hook
-import useTonConnect from "@/hooks/useTonConnect";
 const ConnectButton = () => {
-  const { connector, getWallets, connect } = useTonConnect();
-  const walletsList: any = getWallets();
+  const { encrypt } = useEncrypt();
+  const userFriendlyAddress = useTonAddress();
+  const [tonConnectUI] = useTonConnectUI();
+  useEffect(
+    () =>
+      tonConnectUI.onStatusChange((wallet) => {
+        console.log(wallet);
+        if (
+          wallet.connectItems?.tonProof &&
+          "proof" in wallet.connectItems.tonProof
+        ) {
+          console.log(wallet.connectItems.tonProof.proof, wallet.account);
+        }
+      }),
+    []
+  );
 
-  const connectWallet = () => {
-    // 
-    const embeddedWallet = walletsList.find(
-      isWalletInfoCurrentlyEmbedded
-    ) as WalletInfoCurrentlyEmbedded;
-
-    if (embeddedWallet) {
-      connector.connect({ jsBridgeKey: embeddedWallet.jsBridgeKey });
-      return;
-    }
-
-    const walletConnectionSource = {
-      jsBridgeKey: "tonkeeper",
-    };
-
-    connector.connect(walletConnectionSource);
-    const unsubscribe = connector.onStatusChange((walletInfo) => {
-      console.log(walletInfo);
-      // update state/reactive variables to show updates in the ui
-    });
-  };
+  // get user data
+  useEffect(() => {
+    const user = WebApp.initDataUnsafe?.user?.id || '';
+    const encrydata = encrypt(
+      JSON.stringify({
+        address: userFriendlyAddress,
+        chain: "-239", // -239 mainnet, -1 testnet
+        payload: "",
+        user: user,
+      })
+    );
+    console.log(encrydata)
+    
+  }, [WebApp]);
 
   return (
     <div className="connect-button">
-      <TonConnectButton />
-      <Button size="small" variant="contained" onClick={connectWallet}>
-        Connect
-      </Button>
+      <TonConnectButton className="ton-button" />
     </div>
   );
 };
