@@ -7,13 +7,16 @@ import TradingViewWidget from "./TradingView/TradingView";
 
 const Chart = () => {
   const [priceCollection, setPriceCollection] = useState({});
-
+  const [tokenSymbol, setTokenSymbol] = useState("BTCUSDT")
+  const changeTokenSymbol = (value) => {
+    setTokenSymbol(value)
+  }
   return (
     <div className="chart">
-      <TokenSwitch />
+      <TokenSwitch tokenSymbol={tokenSymbol} changeTokenSymbol={changeTokenSymbol}/>
       <ChartHeader />
       <div className="chart-container">
-        <TradingViewWidget />
+        <TradingViewWidget tokenSymbol={tokenSymbol}/>
       </div>
       <div className="operate-buttons flex-row">
         <div className="operate-button button-green">Open</div>

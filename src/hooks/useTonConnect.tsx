@@ -1,7 +1,17 @@
-import TonConnect, {
-  isWalletInfoCurrentlyEmbedded,
-  WalletInfoCurrentlyEmbedded,
+import {
+  SendTransactionRequest,
+  TonConnect,
+  UserRejectsError,
+  WalletInfo,
 } from "@tonconnect/sdk";
+import { toast } from "react-toastify";
+import { isMobile, openLink } from "@/utils/utils";
+
+const dappMetadata = {
+  manifestUrl:
+    "https://raw.githubusercontent.com/waka992/waka992.github.io/master/docs/tonconnect-manifest.json",
+};
+export const connector = new TonConnect(dappMetadata);
 
 export default function useTonConnect() {
   // init connector
@@ -16,17 +26,42 @@ export default function useTonConnect() {
     return walletsList;
   };
 
-  const connect = async () => {
-    const walletsList = await connector.getWallets(); // or use `walletsList` fetched before
+  const sendTransaction = async (
+    tx: SendTransactionRequest,
+    wallet?: any
+  ): Promise<{ boc: string }> => {
+    try {
+      // if ('universalLink' in wallet && !wallet.embedded && isMobile()) {
+      //   openLink(addReturnStrategy(wallet.universalLink, 'none'), '_blank');
+      // }
 
-    const embeddedWallet = walletsList.find(
-      isWalletInfoCurrentlyEmbedded
-    ) as WalletInfoCurrentlyEmbedded;
+      const result = await connector.sendTransaction(tx);
+      toast.success("Successful transaction");
+      console.log(`Send tx result: ${JSON.stringify(result)}`);
+      return result;
+    } catch (e) {
+      let message = "Send transaction error";
+      let description = "";
 
-    if (embeddedWallet) {
-      connector.connect({ jsBridgeKey: embeddedWallet.jsBridgeKey });
-      return;
+      if (typeof e === "object" && e instanceof UserRejectsError) {
+        message = "You rejected the transaction";
+        description =
+          "Please try again and confirm transaction in your wallet.";
+      }
+
+      toast.error(message);
+      console.log(e);
+      throw e;
     }
   };
-  return { connector, restore, getWallets, connect };
+
+  const addReturnStrategy = (
+    url: string,
+    returnStrategy: "back" | "none"
+  ): string => {
+    const link = new URL(url);
+    link.searchParams.append("ret", returnStrategy);
+    return link.toString();
+  };
+  return { connector, restore, getWallets, sendTransaction };
 }

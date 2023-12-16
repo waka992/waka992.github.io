@@ -8,7 +8,10 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import CustomTabPanel from "../CustomTabPanel/CustomTabPanel";
 
-type Props = {};
+type Props = {
+  tokenSymbol: string;
+  changeTokenSymbol: (string) => void;
+};
 
 const TokenSwitch = (props: Props) => {
   const [open, setOpen] = useState(false);
@@ -24,36 +27,17 @@ const TokenSwitch = (props: Props) => {
       price: 2349.0,
       change: -1.12,
     },
-    {
-      name: "BTCUSDT",
-      price: 43891.0,
-      change: -0.63,
-    },
-    {
-      name: "BTCUSDT",
-      price: 43891.0,
-      change: -0.63,
-    },
-    {
-      name: "BTCUSDT",
-      price: 43891.0,
-      change: -0.63,
-    },
-    {
-      name: "BTCUSDT",
-      price: 43891.0,
-      change: -0.63,
-    },
   ]);
 
-  const switchDrawer = () => {
+  const selectToken = (name) => {
+    props.changeTokenSymbol(name);
     setOpen(!open);
   };
   return (
     <div className="token-switch">
       <div className="token-area clickable" onClick={() => setOpen(true)}>
         <CgArrowsExchangeAlt className="exchange-icon" />
-        <div className="token-name">BTCUSDT</div>
+        <div className="token-name">{props.tokenSymbol}</div>
       </div>
       <Drawer
         className="token-switch-drawer"
@@ -93,7 +77,11 @@ const TokenSwitch = (props: Props) => {
                   <div className="token-list-info">
                     {tokenList.map((item, index) => {
                       return (
-                        <div className="token-list-item flex-row clickable" key={index}>
+                        <div
+                          className="token-list-item flex-row clickable"
+                          key={index}
+                          onClick={() => selectToken(item.name)}
+                        >
                           <span className="token-item-name-info">
                             <div className="token-item-name">{item.name}</div>
                           </span>

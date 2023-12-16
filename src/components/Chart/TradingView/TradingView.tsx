@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import "./TradingView.scss";
 let tvScriptLoadingPromise;
 
-export default function TradingViewWidget() {
+type Props = {
+  tokenSymbol: string;
+};
+
+const TradingViewWidget = (props: Props) => {
   const timeSwap = [
     { name: "Time", params: "1" },
     { name: "15m", params: "15" },
@@ -11,7 +15,7 @@ export default function TradingViewWidget() {
     { name: "1D", params: "D" },
   ];
   const onLoadScriptRef: any = useRef();
-  const [time, setTime] = useState("D");
+  const [timeSelect, setTimeSelect] = useState("D");
 
   useEffect(() => {
     onLoadScriptRef.current = createWidget;
@@ -29,7 +33,7 @@ export default function TradingViewWidget() {
     }
 
     tvScriptLoadingPromise.then(
-      () => onLoadScriptRef.current && onLoadScriptRef.current(time)
+      () => onLoadScriptRef.current && onLoadScriptRef.current(timeSelect)
     );
 
     return () => (onLoadScriptRef.current = null);
@@ -41,7 +45,7 @@ export default function TradingViewWidget() {
       ) {
         new window.TradingView["widget"]({
           autosize: true,
-          symbol: "BINANCE:BTCUSDT",
+          symbol: "BINANCE:"+props.tokenSymbol,
           hide_top_toolbar: true,
           hide_legend: true,
           interval: time,
@@ -54,14 +58,22 @@ export default function TradingViewWidget() {
         });
       }
     }
-  }, [time]);
+  }, [timeSelect, props.tokenSymbol]);
 
   return (
     <div className="trading-view" style={{ height: "100%", width: "100%" }}>
       <div className="trading-header flex-row">
         {timeSwap.map((item, index) => {
           return (
-            <span className={`trading-time-option ${item.params === time ? "hl" : ""}`} key={index} onClick={() => {setTime(item.params)}}>
+            <span
+              className={`trading-time-option ${
+                item.params === timeSelect ? "hl" : ""
+              }`}
+              key={index}
+              onClick={() => {
+                setTimeSelect(item.params);
+              }}
+            >
               {item.name}
             </span>
           );
@@ -79,4 +91,6 @@ export default function TradingViewWidget() {
       </div>
     </div>
   );
-}
+};
+
+export default TradingViewWidget;

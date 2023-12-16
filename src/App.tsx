@@ -1,13 +1,14 @@
 // modules
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import eruda from "eruda";
 import WebApp from "@twa-dev/sdk";
 import { Routes, Route, HashRouter, Navigate } from "react-router-dom";
 import GlobalContext from "@/store/global-context";
-
+import { ToastContainer } from "react-toastify";
 // style
 import "./App.css";
 import "@/styles/Shared.css";
+import "react-toastify/dist/ReactToastify.css";
 
 // components
 import TopBar from "./pages/TopBar/TopBar";
@@ -32,22 +33,22 @@ function App(props) {
   } = props;
   const { encrypt } = useEncrypt();
   const [count, setCount] = useState(0);
+  // fyk test: 0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm
+  const [userId, setUserId] = useState("")
 
+  const setUserIdHandler = (id) => {
+    setUserId(id)
+  }
   const alertClick = () => {
     WebApp.showAlert(`Hello World! Current count is ${count}`);
     console.log(WebApp.initDataUnsafe);
   };
 
-  const encrydata = encrypt(
-    JSON.stringify({
-      address:
-        "0:b458c58bb40e7ddd627717695cea84a9cbede9513f4b1d9fe503fe4b310963d9",
-      chain: "-239",
-      payload: "123",
-    })
-  );
-  // console.log(encrydata);
-  // 0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm
+  useEffect(() => {
+    WebApp.ready()
+    WebApp.expand()
+    console.log(WebApp.isExpanded)
+  }, [])
 
   eruda.init();
 
@@ -55,6 +56,8 @@ function App(props) {
     <div className="App flex-column">
       <GlobalContext.Provider
         value={{
+          userId,
+          setUserIdHandler,
           sendMessage,
           sendJsonMessage,
           lastMessage,
@@ -77,6 +80,18 @@ function App(props) {
           </HashRouter>
         </TonConnectUIProvider>
       </GlobalContext.Provider>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
