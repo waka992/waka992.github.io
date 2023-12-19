@@ -11,13 +11,12 @@ const TopBar = () => {
   const routeList = [
     {name:"Home", route: "/"},
     {name:"Market", route: "/market"},
-    {name:"Order", route: "/order"},
+    {name:"Trade", route: "/trade"},
     {name:"My Wallet",route: "/wallet"},
   ]
   const [open, setOpen] = useState(false);
   const switchPage = useCallback((route) => {
     setOpen(false)
-    console.log(route)
     nav(route)
   }, [])
 

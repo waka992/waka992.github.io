@@ -33,6 +33,7 @@ function App(props) {
   } = props;
   const { encrypt } = useEncrypt();
   const [count, setCount] = useState(0);
+  // ys test : 0QDAzIZ6M3IN8ka6teYN-djiGXjAjprkZqjb_gdKM3yunQPs
   // fyk test: 0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm
   const [userId, setUserId] = useState("")
 
@@ -73,7 +74,7 @@ function App(props) {
               <Route path={"/"} element={<HomePage />} />
               <Route path={"/market"} element={<MarketPage />} />
               <Route path={"/wallet"} element={<WalletPage />} />
-              <Route path={"/order"} element={<OrderPage />} />
+              <Route path={"/trade"} element={<OrderPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
               {/* <Route path={"/auth"} element={<AuthPage />} /> */}
             </Routes>

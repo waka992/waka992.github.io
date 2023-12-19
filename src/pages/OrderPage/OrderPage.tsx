@@ -1,36 +1,161 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import "./OrderPage.scss";
 import "@/styles/Tabs.css";
 import TokenSwitch from "@/components/TokenSwitch/TokenSwitch";
 import { FaCaretDown } from "react-icons/fa6";
 import { FiEdit } from "react-icons/fi";
+import { RiFileList2Fill } from "react-icons/ri";
 import { MdCandlestickChart } from "react-icons/md";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import PositionList from "@/components/PositionList/PositionList";
+import OrderList from "@/components/OrderList/OrderList";
 import CustomTabPanel from "@/components/CustomTabPanel/CustomTabPanel";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import { useLocation, useNavigate } from "react-router-dom";
+import Drawer from "@mui/material/Drawer";
+import AdjustLeverage from "@/components/Drawer/AdjustLeverage/AdjustLeverage";
+import AdjustSlippage from "@/components/Drawer/AdjustSlippage/AdjustSlippage";
+import OrderConfirm from "@/components/Drawer/OrderConfirm/OrderConfirm";
+
 type Props = {};
 
 const OrderPage = (props: Props) => {
+  const routeParams = useLocation();
+  if (routeParams && routeParams.state) {
+    const { direction } = routeParams.state;
+  }
+  const nav = useNavigate();
+
   const [index, setIndex] = React.useState(0);
+  const [tokenSymbol, setTokenSymbol] = useState("BTCUSDT");
+
+  // navigate
+  const navToChage = useCallback(() => {
+    nav("/market");
+  }, []);
+
+  const navToWallet = useCallback(() => {
+    nav("/wallet");
+  }, []);
+
+  // drawer
+  const [open, setOpen] = useState(false);
+  const adjustLeverageOpen = useCallback(() => {
+    setOpen(!open);
+  }, []);
+
+  const [slippageOpen, setSlippageOpen] = useState(false);
+  const adjustSlippageOpen = useCallback(() => {
+    setSlippageOpen(!slippageOpen);
+  }, []);
+
+  const [confirmDrawerOpen, setConfirmDrawerOpen] = useState(false);
+  const confirmDrawerOpenHandle = useCallback(() => {
+    setConfirmDrawerOpen(true);
+  }, []);
+
+  const changeTokenSymbol = (value) => {
+    setTokenSymbol(value);
+  };
+
+  // leverage
+  const [lever, setLever] = useState(25);
+  const leverChangeHandle = (value) => {
+    if (value) {
+      setLever(value);
+    }
+  };
+
+  // slippage
+  const [slippage, setSlippage] = useState(0.1);
+  const slipChangeHandle = (value) => {
+    if (value) {
+      setSlippage(value);
+    }
+  };
+
+  // price
+  const [price, setPrice] = useState(0);
+  const priceChange = (e) => {
+    if (e.target.value) {
+      const value = e.target.value;
+      if (value > 0 || value === 0) {
+        setPrice(value);
+      }
+    }
+  };
+  const formatPriceChange = (e) => {
+    if (e.target.value) {
+      const value = Number(e.target.value).toFixed(2);
+      setPrice(Number(value));
+    }
+  };
+
+  // amount
+  const [amount, setAmount] = useState(0);
+  const amountChange = (e) => {
+    if (e.target.value) {
+      const value = e.target.value;
+      if (value > 0 || value === 0) {
+        setAmount(value);
+      }
+    }
+  };
+  const formatAmountChange = (e) => {
+    if (e.target.value) {
+      const value = Number(e.target.value).toFixed(3);
+      setAmount(Number(value));
+    }
+  };
+
+  // balance
+  const [balance, setBalance] = useState(0);
+
+  // order
+  const [operation, setOperation] = useState("")
+  const [margin, setMargin] = useState(0)
+  const order = useCallback((operation) => {
+    // validate first
+    setOperation(operation)
+    confirmDrawerOpenHandle()
+  },[])
+
+  const confirmOrder = useCallback(() => {
+    // send order
+  }, [])
+
+  // switch direction
+  const [selectedDirection, setSelectedDirection] = useState("open");
+  const swichOperaDirection = useCallback((direction) => {
+    setSelectedDirection(direction);
+  }, []);
 
   return (
     <div className="order-page">
       <div className="order-token-control flex-row bottom-gap">
         <div className="order-token-control-left">
-          <TokenSwitch />
+          <TokenSwitch
+            tokenSymbol={tokenSymbol}
+            changeTokenSymbol={changeTokenSymbol}
+          />
         </div>
 
-        <MdCandlestickChart  className="order-token-control-right"/>
+        <MdCandlestickChart
+          className="order-token-control-right"
+          onClick={navToChage}
+        />
       </div>
 
       <div className="order-info flex-row bottom-gap">
-        <div className="lever clickable order-base-color">
-          <span>Lever: </span>
-          <span>5x</span>
+        <div
+          className="lever clickable order-base-color"
+          onClick={adjustLeverageOpen}
+        >
+          <span>Leverage: </span>
+          <span>{lever}x</span>
           <span>
             <FaCaretDown className="lever-icon" />
           </span>
@@ -45,15 +170,32 @@ const OrderPage = (props: Props) => {
       </div>
 
       <div className="direction flex-row bottom-gap">
-        <span className="direction-button flex1 clickable direction-left selected">
+        <span
+          className={`direction-button flex1 clickable direction-left ${
+            selectedDirection === "open" ? "selected" : ""
+          }`}
+          onClick={() => swichOperaDirection("open")}
+        >
           Open Position
         </span>
-        <span className="direction-button flex1 clickable direction-right">
+        <span
+          className={`direction-button flex1 clickable direction-right ${
+            selectedDirection === "close" ? "selected" : ""
+          }`}
+          onClick={() => swichOperaDirection("close")}
+        >
           Close Position
         </span>
       </div>
 
       <div className="order-amount bottom-gap">
+        <div className="balance bottom-gap">
+          <span>Balance: </span>
+          <span>{balance}</span>
+          <span className="balance-trans clickable" onClick={navToWallet}>
+            Transfer
+          </span>
+        </div>
         <div className="avaiable-amount flex-row">
           <span className="avaiable-amount-title">Available</span>
           <span className="avaiable-amount-value order-base-color">
@@ -61,53 +203,84 @@ const OrderPage = (props: Props) => {
           </span>
         </div>
 
-        <div className="value-box">
-          <div className="value-input">
-            <TextField
-              id="filled-start-adornment"
-              type="number"
-              sx={{ width: "100%" }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">USDT</InputAdornment>
-                ),
-              }}
-              variant="filled"
-            />
-          </div>
-          <div className="value-shortcut flex-row">
-            <span className="flex1">+10</span>
-            <span className="flex1">+100</span>
-            <span className="flex1">+500</span>
-            <span className="flex1">MAX</span>
-          </div>
-        </div>
-
-        <div className="balance bottom-gap">
-          <span>Balance: </span>
-          <span>20 </span>
-          <span className="balance-trans">Transfer</span>
-        </div>
-
-        <div className="slippage bottom-gap flex-row">
-          <span className="slippage-title-intro">Slippage Tolerance</span>
-          <span>
-            <span className="slippage-value order-base-color">0.1%</span>
-              <FiEdit className="slippage-icon" />
+        <div className="avaiable-amount flex-row">
+          <span className="avaiable-amount-title">Margin</span>
+          <span className="avaiable-amount-value order-base-color">
+            {margin} USDT
           </span>
         </div>
 
-        <div className="control-buttons">
-          <div className="open-control  flex-row">
-            <div className="open-long-button control-button flex-column button-green">
-              <span className="button-text">Open/Long</span>
-              <span className="calculate-value">≈0.003 BTC</span>
+        <div className="value-box bottom-gap">
+          <div className="value-input flex-row">
+            <div className="price-input-box flex1">
+              <TextField
+                type="number"
+                className="price-input"
+                sx={{ width: "95%" }}
+                variant="filled"
+                value={price}
+                onBlur={formatPriceChange}
+                onChange={priceChange}
+              />
+              <div className="price-input-placeholder">PRICE(USDT)</div>
             </div>
-            <div className="open-short-button control-button flex-column button-red">
-              <span className="button-text">Open/Short</span>
-              <span className="calculate-value">≈0.003 BTC</span>
+
+            <div className="amount-input-box flex1">
+              <TextField
+                className="amount-input"
+                type="number"
+                sx={{ width: "95%" }}
+                value={amount}
+                onBlur={formatAmountChange}
+                onChange={amountChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {tokenSymbol.slice(0, -4)}
+                    </InputAdornment>
+                  ),
+                }}
+                variant="filled"
+              />
+              <div className="price-input-placeholder">AMOUNT</div>
             </div>
           </div>
+        </div>
+
+
+
+        {/* <div className="slippage bottom-gap flex-row">
+          <span className="slippage-title-intro">Slippage Tolerance</span>
+          <span onClick={adjustSlippageOpen}>
+            <span className="slippage-value order-base-color">{slippage}%</span>
+            <FiEdit className="slippage-icon" />
+          </span>
+        </div> */}
+
+        <div className="control-buttons">
+          {selectedDirection === "open" ? (
+            <div className="open-control flex-row">
+              <div className="open-long-button control-button flex-column button-green flex1" onClick={() => order("Open/Long")}>
+                <span className="button-text">Open/Long</span>
+                <span className="calculate-value">≈0.003 BTC</span>
+              </div>
+              {/* <div className="open-short-button control-button flex-column button-red" onClick={() => order("Open/Short")}>
+                <span className="button-text">Open/Short</span>
+                <span className="calculate-value">≈0.003 BTC</span>
+              </div> */}
+            </div>
+          ) : (
+            <div className="open-control flex-row">
+              {/* <div className="open-long-button control-button flex-column button-red" onClick={() => order("Close/Long")}>
+                <span className="button-text">Close/Long</span>
+                <span className="calculate-value">≈0.003 BTC</span>
+              </div> */}
+              <div className="open-short-button control-button flex-column button-red flex1" onClick={() => order("Close/Short")}>
+                <span className="button-text">Close/Short</span>
+                <span className="calculate-value">≈0.003 BTC</span>
+              </div>
+            </div>
+          )}
         </div>
 
         <Tabs
@@ -121,6 +294,13 @@ const OrderPage = (props: Props) => {
             }}
             label="Positions"
           />
+          <Tab
+            sx={{
+              color: "#333",
+            }}
+            label="Orders"
+          />
+          <RiFileList2Fill className="history-list clickable"/>
         </Tabs>
         <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
           <CustomTabPanel value={index} index={0}>
@@ -129,7 +309,54 @@ const OrderPage = (props: Props) => {
             </Box>
           </CustomTabPanel>
         </Box>
+        <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
+          <CustomTabPanel value={index} index={1}>
+            <Box>
+              <OrderList />
+            </Box>
+          </CustomTabPanel>
+        </Box>
       </div>
+
+      <Drawer
+        className="token-switch-drawer"
+        anchor="bottom"
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        <div style={{ height: "50vh" }}>
+          <AdjustLeverage
+            lever={lever}
+            onClose={() => setOpen(false)}
+            onConfirm={leverChangeHandle}
+          />
+        </div>
+      </Drawer>
+
+      <Drawer anchor="bottom" open={slippageOpen} onClose={() => setSlippageOpen(false)}>
+        <div style={{ height: "50vh" }}>
+          <AdjustSlippage
+            slippage={slippage}
+            onClose={() => setSlippageOpen(false)}
+            onConfirm={slipChangeHandle}
+          />
+        </div>
+      </Drawer>
+
+      <Drawer anchor="bottom" open={confirmDrawerOpen} onClose={() => setConfirmDrawerOpen(false)}>
+        <div style={{ height: "50vh" }}>
+        <OrderConfirm 
+            operation={operation}
+            contract={tokenSymbol}
+            price={price}
+            amount={amount}
+            margin={margin}
+            onClose={() => setConfirmDrawerOpen(false)}
+            onConfirm={confirmOrder}
+            />
+        </div>
+      </Drawer>
+
     </div>
   );
 };

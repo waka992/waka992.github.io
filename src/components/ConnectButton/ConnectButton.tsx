@@ -9,6 +9,7 @@ import {
   useTonWallet,
 } from "@tonconnect/ui-react";
 import useAxios from "@/hooks/useAxios";
+import { WalletContractV4 } from "@ton/ton";
 
 // hook
 const ConnectButton = () => {
@@ -39,6 +40,7 @@ const ConnectButton = () => {
           console.log("tonconnectUI onStarusChange")
         if (wallet) {
           const address = Address.parse(wallet.account.address);
+          console.log("connectbutton:", wallet)
           localStorage.setItem("walletAddress", address.toRawString())
           login(address.toRawString());
         }

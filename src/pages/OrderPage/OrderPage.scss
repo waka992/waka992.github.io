@@ -6,14 +6,15 @@
     }
 
     .bottom-gap {
-        margin-bottom: 6px;
+        margin-bottom: 12px;
     }
 
     .order-token-control {
         justify-content: space-between;
-        .order-token-control-left {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
 
-        }
+        .order-token-control-left {}
 
         .order-token-control-right {
             color: var(--black);
@@ -21,7 +22,7 @@
             height: 23px;
         }
     }
- 
+
 
     .order-info {
         justify-content: space-between;
@@ -30,7 +31,8 @@
             color: var(--grey);
         }
 
-        .lever,.order-fee {
+        .lever,
+        .order-fee {
             vertical-align: middle;
         }
 
@@ -43,8 +45,8 @@
     .direction {
         .direction-button {
             text-align: center;
-            height: 40px;
-            line-height: 40px;
+            height: 30px;
+            line-height: 30px;
             background-color: #dedede;
             color: #fff;
 
@@ -67,6 +69,7 @@
         .avaiable-amount {
             justify-content: space-between;
             color: var(--grey);
+            margin-bottom: 10px;
         }
 
         .value-shortcut {
@@ -79,10 +82,40 @@
         }
     }
 
+    .value-box {
+
+        .price-input-box,
+        .amount-input-box {
+            position: relative;
+        }
+
+        .amount-input-box {
+            text-align: right;
+        }
+
+        .price-input,
+        .amount-input {
+            input {
+                text-align: center;
+            }
+        }
+
+        .price-input-placeholder {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--grey);
+            font-size: 11px;
+        }
+    }
+
     .balance {
         color: var(--black);
 
         .balance-trans {
+            margin-left: 10px;
+            font-size: 12px;
             color: #FCD536;
         }
     }
@@ -91,9 +124,11 @@
         justify-content: space-between;
         color: var(--grey);
 
-        .slippage-value,.slippage-icon {
+        .slippage-value,
+        .slippage-icon {
             vertical-align: middle;
         }
+
         .slippage-value {
             margin-right: 4px;
         }
@@ -103,27 +138,42 @@
         .open-control {
             justify-content: space-between;
         }
+
         .control-button {
             width: 45vw;
             border-radius: 4px;
             text-align: center;
             height: 42px;
             color: #fff;
+            margin-bottom: 20px;
 
             .button-text {
                 font-size: 16px;
                 letter-spacing: 0px;
             }
+
             .calculate-value {
                 font-size: 12px;
                 letter-spacing: 0px;
             }
         }
+
         .button-green {
             background-color: var(--green);
         }
+
         .button-red {
             background-color: var(--red);
+        }
+    }
+    .tabs {
+        position: relative;
+
+        .history-list {
+            position: absolute;
+            right: 0;
+            top: 16px;
+            color: var(--grey);
         }
     }
 }

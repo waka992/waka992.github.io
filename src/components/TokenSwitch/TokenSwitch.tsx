@@ -47,7 +47,7 @@ const TokenSwitch = (props: Props) => {
       >
         <div
           className="contract-list"
-          style={{ width: "85vw", padding: "10px" }}
+          style={{ width: "80vw", padding: "10px" }}
         >
           <div className="contract-header">CONTRACT</div>
           <Tabs

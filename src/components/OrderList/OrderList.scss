@@ -1,0 +1,97 @@
+.order-list {
+    padding-top: 10px;
+    color: var(--grey);
+    font-size: 12px;
+
+    .position-item {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+    .position-mb {
+        margin-bottom: 10px;
+    }
+
+    .token-info {
+
+        .direction,
+        .token-name,
+        .leverage {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        .direction {
+            color: white;
+            border-radius: 2px;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+
+            &.up {
+                background-color: var(--green);
+            }
+
+            &.down {
+                background-color: var(--red);
+            }
+        }
+
+        .token-name {
+            font-size: 16px;
+            color: var(--black);
+        }
+    }
+
+    .profit {
+        justify-content: space-between;
+
+        .roi {
+            text-align: right;
+        }
+
+        .pnl-value,
+        .roi-value {
+            font-size: 16px;
+        }
+    }
+
+    .position-detail {
+        font-size: 10px;
+
+        .position-detail-first,
+        .position-detail-second {
+            justify-content: space-between;
+        }
+
+        .margin-ratio,
+        .liq-price {
+            text-align: right;
+        }
+
+        .amount-value,
+        .margin-value,
+        .entry-price-value,
+        .mark-price-value,
+        .liq-price-value {
+            color: var(--black);
+        }
+
+        .value-font-size {
+            font-size: 12px;
+        }
+    }
+
+    .operation {
+        text-align: center;
+        .adjust-leverage,.close-position {
+            display: inline-block;
+        }
+        .adjust-leverage {
+            margin-right: 20px;
+        }
+    }
+
+}

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import "./AdjustLeverage.scss";
 import { IoCloseSharp } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
-import { Button, TextField, Slider, InputAdornment } from "@mui/material";
+import { Button, TextField, Slider } from "@mui/material";
 type Props = {
   lever: number;
   onClose: () => void;
+  onConfirm?: (number) => void
 };
 
 const AdjustLeverage = (props: Props) => {
@@ -47,6 +48,7 @@ const AdjustLeverage = (props: Props) => {
   };
 
   const confirmHandle = () => {
+    props.onConfirm(lever)
     props.onClose()
   }
 
@@ -54,7 +56,7 @@ const AdjustLeverage = (props: Props) => {
     <div className="adjust-leverage" style={{ height: "50vh" }}>
       <div className="adjust-leverage-header">
         Adjust Leverage
-        <div className="close-button" onClick={props.close}>
+        <div className="close-button" onClick={props.onClose}>
           <IoCloseSharp />
         </div>
       </div>

@@ -14,6 +14,9 @@ import {
   useIsConnectionRestored,
 } from "@tonconnect/ui-react";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import useTransaction from "@/hooks/useTransaction";
+import { Drawer } from "@mui/material";
+import TransactionConfirm from "../Drawer/TransactionConfirm/TransactionConfirm";
 
 interface Props {
   address: string;
@@ -22,9 +25,14 @@ interface Props {
 const Wallet = (props: Props) => {
   const shortStr = useShortStr(4, 4);
   const [copied, setCopied] = useState(false)
+  const [open, setOpen] = useState(false);
+  const drawerOpen = useCallback(() => {
+    setOpen(true);
+  }, []);
 
   const [balanceVisiable, setBalanceVisiable] = useState(false);
   const [tonConnectUI, setOptions] = useTonConnectUI();
+  // const txn = useTransaction()
   const connectionRestored = useIsConnectionRestored();
   const switchBalanceVisiable = useCallback(() => {
     setBalanceVisiable(!balanceVisiable);
@@ -32,6 +40,7 @@ const Wallet = (props: Props) => {
 
 
   const sendTxn = useCallback(() => {
+    // txn()
     const tx: any = {
       validUntil: Date.now() + 1000000,
       messages: [
@@ -107,6 +116,14 @@ const Wallet = (props: Props) => {
           </Button>
         </ButtonGroup>
       </div>
+
+      <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
+        <div style={{ height: "50vh" }}>
+        <TransactionConfirm 
+            onClose={() => setOpen(false)}
+            />
+        </div>
+      </Drawer>
     </div>
   );
 };

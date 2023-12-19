@@ -1,0 +1,44 @@
+.adjust-slippage {
+    padding: 0 20px;
+
+    .adjust-leverage-mb {
+        margin-bottom: 10px;
+    }
+
+    .adjust-leverage-header {
+        position: relative;
+        font-size: 16px;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+
+        .close-button {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            width: 20px;
+        }
+    }
+
+    .leverage-input-inner {
+        width: 100%;
+        text-align: center;
+
+        input {
+            text-align: center;
+        }
+    }
+
+    .limit-text ,.notice {
+        font-size: 11px;
+    }
+
+    .notice-icon {
+        vertical-align: middle;
+        margin-right: 2px;
+    }
+
+    .confirm-button {
+        width: 100%;
+    }
+}

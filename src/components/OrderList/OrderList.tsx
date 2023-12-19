@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./PositionList.scss";
+import "./OrderList.scss";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import AdjustLeverage from "../Drawer/AdjustLeverage/AdjustLeverage";
@@ -8,7 +8,7 @@ interface Props {
   control?: boolean;
 }
 
-const PositionList = (props: Props) => {
+const OrderList = (props: Props) => {
   const [tradeList] = useState([
     { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: -90.43 },
   ]);
@@ -21,7 +21,7 @@ const PositionList = (props: Props) => {
   };
 
   return (
-    <div className="position-list flex-column">
+    <div className="order-list flex-column">
       <div className="position-item">
         <div className="token-info position-mb">
           <div className="direction up"></div>
@@ -118,4 +118,4 @@ const PositionList = (props: Props) => {
   );
 };
 
-export default PositionList;
+export default OrderList;

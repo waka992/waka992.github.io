@@ -154,6 +154,14 @@ td {
   flex: 1;
 }
 
+.--tar {
+  text-align: right;
+}
+
+.--tal {
+  text-align: left;
+}
+
 .muted {
   opacity: 0.7;
 }
