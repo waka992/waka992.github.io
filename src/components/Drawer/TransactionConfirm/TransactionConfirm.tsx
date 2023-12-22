@@ -2,53 +2,63 @@ import React, { useState } from "react";
 import "./TransactionConfirm.scss";
 import { IoCloseSharp } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
-import { Button, TextField, Slider, InputAdornment } from "@mui/material";
+import { Button, TextField, InputAdornment } from "@mui/material";
 type Props = {
   onClose: () => void;
+  onConfirm: (number) => void;
 };
 
 const TransactionConfirm = (props: Props) => {
   
 
-  const [slippage, setSlippage] = useState(props.slippage);
+  const [amount, setAmount] = useState(0);
 
-  const adjustSlippageChange = (e) => {
+  const amountChange = (e) => {
     const value = Number(e.target.value);
-    if (value < 0 || value > 10) {
+    if (value < 0) {
       return;
     }
-    setSlippage(value);
+    setAmount(value);
   };
 
   const confirmHandle = () => {
     props.onClose();
+    props.onConfirm(amount);
   };
 
   return (
-    <div className="adjust-slippage" style={{ height: "50vh" }}>
-      <div className="adjust-leverage-header">
-        Slippage Tolerance
+    <div className="transaction-confirm" style={{ height: "50vh" }}>
+      <div className="transaction-confirm-header">
+        Transaction
         <div className="close-button" onClick={props.onClose}>
           <IoCloseSharp />
         </div>
       </div>
 
-      <div className="leverage-input adjust-leverage-mb">
+      <div className="amount-input txn-confirm-mb">
         <TextField
-          className="leverage-input-inner"
+          className="amount-input-inner"
           variant="filled"
           size="small"
           type="number"
-          value={slippage}
-          onChange={adjustSlippageChange}
+          value={amount}
+          onChange={amountChange}
+          sx={{
+            paddingTop: "10px"
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                TON
+              </InputAdornment>
+            ),
+          }}
         />
       </div>
 
-      <div className="notice adjust-leverage-mb">
+      <div className="notice txn-confirm-mb">
         <RiErrorWarningFill className="notice-icon" />
-        Setting a higher slippage tolerance can increase the transaction rate,
-        but the transaction price may deviate from the latest price. Please use
-        it with caution.
+        Please confirm the amount. Please open the wallet mobile app before clicking the confirmation button. TON will send you a request for confirmation.
       </div>
       <div className="confirm-button-box">
         <Button

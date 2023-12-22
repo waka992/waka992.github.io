@@ -12,7 +12,7 @@ const TopBar = () => {
     {name:"Home", route: "/"},
     {name:"Market", route: "/market"},
     {name:"Trade", route: "/trade"},
-    {name:"My Wallet",route: "/wallet"},
+    {name:"Wallet",route: "/wallet"},
   ]
   const [open, setOpen] = useState(false);
   const switchPage = useCallback((route) => {

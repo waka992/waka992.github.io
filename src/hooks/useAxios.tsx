@@ -10,15 +10,15 @@ const useAxios = () => {
   axios.defaults.headers.post["Content-Type"] =
     "application/json; charset=utf-8";
   const service = axios.create({
-    baseURL: "http://2o6465101l.wicp.vip/",
+    baseURL: "http://localhost:8088",
     timeout: 10000,
   });
 
   service.interceptors.request.use(
     (config) => {
-      const token = localStorage.getItem("xc-token");
+      const token = sessionStorage.getItem("token");
       if (token) {
-        config.headers["xc-token"] = token;
+        config.headers["token"] = token;
       }
       return config;
     },
@@ -38,11 +38,11 @@ const useAxios = () => {
           // response.data = RSA.DecryptData(response.data);
           console.log(response.data);
         }
-        if (response.data.code == 1) {
+        if (response.data.code == 200) {
           // token
-          if (response.headers["xc-token"]) {
-            localStorage.setItem("xc-token", response.headers["xc-token"]); // 获取header的token
-          }
+          // if (response.headers["xc-token"]) {
+          //   localStorage.setItem("xc-token", response.headers["xc-token"]); // 获取header的token
+          // }
           // 正常data
           if (response.data.data) {
             return response.data.data;

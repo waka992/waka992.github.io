@@ -1,11 +1,11 @@
-.adjust-slippage {
+.transaction-confirm {
     padding: 0 20px;
 
-    .adjust-leverage-mb {
-        margin-bottom: 10px;
+    .txn-confirm-mb {
+        margin-bottom: 20px;
     }
 
-    .adjust-leverage-header {
+    .transaction-confirm-header {
         position: relative;
         font-size: 16px;
         text-align: center;
@@ -20,16 +20,18 @@
         }
     }
 
-    .leverage-input-inner {
+    .amount-input-inner {
         width: 100%;
         text-align: center;
 
         input {
             text-align: center;
+            padding: 10px 0;
+            padding-left: 30px;
         }
     }
 
-    .limit-text ,.notice {
+    .notice {
         font-size: 11px;
     }
 

@@ -5,7 +5,8 @@ import basicSsl from "@vitejs/plugin-basic-ssl";
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), basicSsl()],
+  // plugins: [react(), basicSsl()],
+  plugins: [react()],
   build: {
     outDir: "./docs",
   },

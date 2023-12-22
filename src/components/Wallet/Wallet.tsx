@@ -10,13 +10,16 @@ import { FiSend } from "react-icons/fi";
 import { RiWalletLine } from "react-icons/ri";
 import {
   useTonConnectUI,
-  useTonWallet,
-  useIsConnectionRestored,
 } from "@tonconnect/ui-react";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import useTransaction from "@/hooks/useTransaction";
 import { Drawer } from "@mui/material";
 import TransactionConfirm from "../Drawer/TransactionConfirm/TransactionConfirm";
+import ClosePosition from "../Drawer/ClosePosition/ClosePosition";
+import WebApp from "@twa-dev/sdk";
+import useEncrypt from "@/hooks/useEncrypt";
+import useAxios from "@/hooks/useAxios";
+import Cookies from "js-cookie";
 
 interface Props {
   address: string;
@@ -24,55 +27,96 @@ interface Props {
 
 const Wallet = (props: Props) => {
   const shortStr = useShortStr(4, 4);
-  const [copied, setCopied] = useState(false)
+  const {encrypt} = useEncrypt()
+  const {post} = useAxios()
+  const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
   const drawerOpen = useCallback(() => {
     setOpen(true);
   }, []);
 
+  const [positionOpen, setPositionOpen] = useState(false);
+  const positionDrawerOpen = useCallback(() => {
+    setPositionOpen(true);
+  }, []);
+
   const [balanceVisiable, setBalanceVisiable] = useState(false);
   const [tonConnectUI, setOptions] = useTonConnectUI();
   // const txn = useTransaction()
-  const connectionRestored = useIsConnectionRestored();
   const switchBalanceVisiable = useCallback(() => {
     setBalanceVisiable(!balanceVisiable);
   }, [balanceVisiable]);
 
+  // balance query
+  const [balance, setBalance] = useState(0);
+  const [surplus, setSurplus] = useState(0);
+  const [freeze, setFreeze] = useState(0);
 
-  const sendTxn = useCallback(() => {
+  const getBalance = () => {
+    const userId = WebApp.initDataUnsafe?.user?.id || "123123";
+    const address = Cookies.get("address")
+    const signature = encrypt(`${userId}|${address}`)
+    const params = {
+      userId,
+      address,
+      signature
+    }
+    interface Ires  {
+      userId: number,
+      balance: number, 
+      availableBalance: number
+    }
+    post("/user/queryBalance", params).then((res:Ires) => {
+      console.log(res)
+      setBalanceHandler(res.balance, res.availableBalance)
+    });
+  }
+
+  const setBalanceHandler = (balance, available) => {
+    if (!isNaN(Number(balance)) && !isNaN(Number(available))) {
+      const freezeAmount = balance - available
+      setBalance(balance)
+      setSurplus(available)
+      setFreeze(freezeAmount)
+    }
+  }
+
+  const sendTxn = (value) => {
+    if (!value) {
+      return;
+    }
     // txn()
     const tx: any = {
       validUntil: Date.now() + 1000000,
       messages: [
         {
-          // address: "0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm", // destination address
-          address:
-            "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F", // destination address
-          amount: 20000000, //Toncoin in nanotons
+          address: "0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm", // destination address
+          // address:
+          //   "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F", // destination address
+          amount: value * 10 ** 9, //Toncoin in nanotons
         },
       ],
     };
     tonConnectUI.sendTransaction(tx);
-  }, []);
+  };
+
+  const closePosition = () => {};
 
   useEffect(() => {
+    getBalance()
   }, []);
 
-  if (!connectionRestored) {
-    return <div>Please wait...</div>;
-  }
 
   return (
     <div className="wallet">
       <div className="address-box">
-      <CopyToClipboard text={props.address}
-          onCopy={() => setCopied(false)}>
-            <div>
+        <CopyToClipboard text={props.address} onCopy={() => setCopied(false)}>
+          <div>
             <span className="address">
               {props.address && shortStr(props.address)}
             </span>
             <FaRegCopy className="copy-icon clickable" />
-            </div>
+          </div>
         </CopyToClipboard>
       </div>
       <div className="visible-icon clickable" onClick={switchBalanceVisiable}>
@@ -82,7 +126,7 @@ const Wallet = (props: Props) => {
         {/* total balance */}
         <div className="balance-desc">TOTAL:</div>
         <span className="balance">
-          {balanceVisiable ? `$${134.8123}` : `*****`}
+          {balanceVisiable ? `$${balance}` : `*****`}
         </span>
       </div>
 
@@ -90,13 +134,13 @@ const Wallet = (props: Props) => {
         <div className="balance-surplus">
           <span className="surplus-desc">SURPLUS:</span>
           <span className="surplus-value">
-            {balanceVisiable ? `$${15000.3432}` : `****`}
+            {balanceVisiable ? `$${surplus}` : `****`}
           </span>
         </div>
         <div className="freeze-balance-box">
           <span className="freeze-desc">FREEZE:</span>
           <span className="freeze-value">
-            {balanceVisiable ? `$${15000.3333}` : `****`}
+            {balanceVisiable ? `$${freeze}` : `****`}
           </span>
         </div>
       </div>
@@ -106,7 +150,7 @@ const Wallet = (props: Props) => {
           variant="contained"
           aria-label="outlined primary button group"
         >
-          <Button size="small" onClick={sendTxn}>
+          <Button size="small" onClick={drawerOpen}>
             <FiSend className="button-icon" />
             Send
           </Button>
@@ -119,9 +163,20 @@ const Wallet = (props: Props) => {
 
       <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
         <div style={{ height: "50vh" }}>
-        <TransactionConfirm 
+          <TransactionConfirm
+            onConfirm={sendTxn}
             onClose={() => setOpen(false)}
-            />
+          />
+        </div>
+      </Drawer>
+
+      <Drawer
+        anchor="bottom"
+        open={positionOpen}
+        onClose={() => setPositionOpen(false)}
+      >
+        <div style={{ height: "60vh" }}>
+          <ClosePosition onConfirm={closePosition} onClose={() => setOpen(false)} />
         </div>
       </Drawer>
     </div>

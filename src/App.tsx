@@ -31,25 +31,21 @@ function App(props) {
     readyState,
     getWebSocket,
   } = props;
-  const { encrypt } = useEncrypt();
-  const [count, setCount] = useState(0);
   // ys test : 0QDAzIZ6M3IN8ka6teYN-djiGXjAjprkZqjb_gdKM3yunQPs
   // fyk test: 0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm
-  const [userId, setUserId] = useState("")
+  const [userId, setUserId] = useState("");
+
 
   const setUserIdHandler = (id) => {
-    setUserId(id)
-  }
-  const alertClick = () => {
-    WebApp.showAlert(`Hello World! Current count is ${count}`);
-    console.log(WebApp.initDataUnsafe);
+    setUserId(id);
   };
 
+
   useEffect(() => {
-    WebApp.ready()
-    WebApp.expand()
-    console.log(WebApp.isExpanded)
-  }, [])
+    WebApp.ready();
+    WebApp.expand();
+    console.log(WebApp.isExpanded);
+  }, []);
 
   eruda.init();
 

@@ -1,0 +1,40 @@
+.close-position {
+    padding: 10px;
+
+    .order-confirm-mb {
+        margin-bottom: 10px;
+    }
+
+    .operate-title {
+        position: relative;
+        font-size: 16px;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 20px;
+
+        .close-button {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            width: 20px;
+        }
+    }
+
+    .grey {
+        color: var(--grey);
+    }
+
+    .confirm-info {
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .require-margin {
+        margin-bottom: 20px;
+    }
+
+    .confirm-button {
+        width: 100%;
+    }
+}
