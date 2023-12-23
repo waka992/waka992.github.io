@@ -1,23 +1,36 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import "./PositionList.scss";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import AdjustLeverage from "../Drawer/AdjustLeverage/AdjustLeverage";
+import ClosePosition from "../Drawer/ClosePosition/ClosePosition";
+import useFormatUSD from "@/hooks/useFormatUSD";
+import { toast } from "react-toastify";
 
 interface Props {
   control?: boolean;
 }
 
 const PositionList = (props: Props) => {
+  const formatusd = useFormatUSD();
   const [tradeList] = useState([
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: -90.43 },
+    { symbol: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: -90.43 },
   ]);
   const [value] = useState(2);
-  const [open, setOpen] = useState(false);
   const [lever, setLever] = useState(25);
 
-  const adjustLeverageHandle = () => {
+  const [open, setOpen] = useState(false);
+  const adjustLeverageHandle = useCallback(() => {
     setOpen(!open);
+  }, []);
+
+  const [positionOpen, setPositionOpen] = useState(false);
+  const positionDrawerOpen = useCallback(() => {
+    setPositionOpen(true);
+  }, []);
+  const closePositionConfirm = () => {
+    setPositionOpen(false)
+    toast.success("Order Success")
   };
 
   return (
@@ -57,7 +70,9 @@ const PositionList = (props: Props) => {
 
             <div className="margin flex-column">
               <span>Margin (USDT)</span>
-              <span className="margin-value value-font-size">29.88</span>
+              <span className="margin-value value-font-size">
+                {formatusd(29.7)}
+              </span>
             </div>
 
             <div className="margin-ratio flex-column">
@@ -75,16 +90,20 @@ const PositionList = (props: Props) => {
             <div className="entry-price flex-column">
               <span>Entry Price(USDT)</span>
               <span className="entry-price-value value-font-size">
-                42987.70
+                {formatusd(42987.7)}
               </span>
             </div>
             <div className="mark-price flex-column">
               <span>Mark Price(USDT)</span>
-              <span className="mark-price-value value-font-size">42987.70</span>
+              <span className="mark-price-value value-font-size">
+                {formatusd(42987.7)}
+              </span>
             </div>
             <div className="liq-price flex-column">
               <span>Liq.Price(USDT)</span>
-              <span className="liq-price-value value-font-size">42987.70</span>
+              <span className="liq-price-value value-font-size">
+                {formatusd(42987.7)}
+              </span>
             </div>
           </div>
         </div>
@@ -96,7 +115,11 @@ const PositionList = (props: Props) => {
               </Button>
             </div>
             <div className="close-position">
-              <Button size="small" variant="outlined">
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={positionDrawerOpen}
+              >
                 Close Position
               </Button>
             </div>
@@ -112,6 +135,19 @@ const PositionList = (props: Props) => {
       >
         <div style={{ height: "50vh" }}>
           <AdjustLeverage lever={lever} onClose={() => setOpen(false)} />
+        </div>
+      </Drawer>
+
+      <Drawer
+        anchor="bottom"
+        open={positionOpen}
+        onClose={() => setPositionOpen(false)}
+      >
+        <div style={{ height: "70vh" }}>
+          <ClosePosition
+            onConfirm={closePositionConfirm}
+            onClose={() => setOpen(false)}
+          />
         </div>
       </Drawer>
     </div>

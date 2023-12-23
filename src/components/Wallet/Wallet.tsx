@@ -15,7 +15,6 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import useTransaction from "@/hooks/useTransaction";
 import { Drawer } from "@mui/material";
 import TransactionConfirm from "../Drawer/TransactionConfirm/TransactionConfirm";
-import ClosePosition from "../Drawer/ClosePosition/ClosePosition";
 import WebApp from "@twa-dev/sdk";
 import useEncrypt from "@/hooks/useEncrypt";
 import useAxios from "@/hooks/useAxios";
@@ -35,10 +34,7 @@ const Wallet = (props: Props) => {
     setOpen(true);
   }, []);
 
-  const [positionOpen, setPositionOpen] = useState(false);
-  const positionDrawerOpen = useCallback(() => {
-    setPositionOpen(true);
-  }, []);
+
 
   const [balanceVisiable, setBalanceVisiable] = useState(false);
   const [tonConnectUI, setOptions] = useTonConnectUI();
@@ -100,7 +96,6 @@ const Wallet = (props: Props) => {
     tonConnectUI.sendTransaction(tx);
   };
 
-  const closePosition = () => {};
 
   useEffect(() => {
     getBalance()
@@ -167,16 +162,6 @@ const Wallet = (props: Props) => {
             onConfirm={sendTxn}
             onClose={() => setOpen(false)}
           />
-        </div>
-      </Drawer>
-
-      <Drawer
-        anchor="bottom"
-        open={positionOpen}
-        onClose={() => setPositionOpen(false)}
-      >
-        <div style={{ height: "60vh" }}>
-          <ClosePosition onConfirm={closePosition} onClose={() => setOpen(false)} />
         </div>
       </Drawer>
     </div>

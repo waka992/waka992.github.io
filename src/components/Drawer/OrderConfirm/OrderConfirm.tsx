@@ -2,6 +2,7 @@ import React from "react";
 import "./OrderConfirm.scss";
 import { Button } from "@mui/material";
 import { IoCloseSharp } from "react-icons/io5";
+import useFormatUSD from "@/hooks/useFormatUSD";
 
 type Props = {
   operation: string;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const OrderConfirm = (props: Props) => {
+  const formatusd = useFormatUSD()
   return (
     <div className="order-confirm">
       <div className="operate-title">
@@ -30,7 +32,7 @@ const OrderConfirm = (props: Props) => {
         </div>
         <div className="price flex-row order-confirm-mb">
           <span className="flex1 grey">Price</span>
-          <span className="flex1 --tar">{props.price} USDT</span>
+          <span className="flex1 --tar">{formatusd(props.price)} USDT</span>
         </div>
         <div className="amount flex-row order-confirm-mb">
           <span className="flex1 grey">Amount</span>

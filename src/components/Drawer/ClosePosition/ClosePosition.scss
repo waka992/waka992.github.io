@@ -1,7 +1,11 @@
 .close-position {
     padding: 10px;
 
-    .order-confirm-mb {
+    .close-position-mb {
+        margin-bottom: 5px;
+    }
+
+    .close-position-mb2 {
         margin-bottom: 10px;
     }
 
@@ -36,5 +40,13 @@
 
     .confirm-button {
         width: 100%;
+    }
+
+    .amount-input {
+        input {
+            vertical-align: middle;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
     }
 }

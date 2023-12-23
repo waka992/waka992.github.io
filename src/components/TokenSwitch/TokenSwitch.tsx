@@ -7,6 +7,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import CustomTabPanel from "../CustomTabPanel/CustomTabPanel";
+import useFormatUSD from "@/hooks/useFormatUSD";
 
 type Props = {
   tokenSymbol: string;
@@ -14,17 +15,19 @@ type Props = {
 };
 
 const TokenSwitch = (props: Props) => {
+  const formatusd = useFormatUSD()
+
   const [open, setOpen] = useState(false);
   const [index, setIndex] = React.useState(0);
   const [tokenList, setTokenList] = React.useState([
     {
       name: "BTCUSDT",
-      price: 43891.0,
+      price: formatusd(43891.0),
       change: -0.63,
     },
     {
       name: "ETHUSDT",
-      price: 2349.0,
+      price: formatusd(2349.0),
       change: -1.12,
     },
   ]);

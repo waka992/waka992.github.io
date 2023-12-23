@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./OrderPage.scss";
 import "@/styles/Tabs.css";
 import TokenSwitch from "@/components/TokenSwitch/TokenSwitch";
@@ -10,7 +10,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import PositionList from "@/components/PositionList/PositionList";
-import OrderList from "@/components/OrderList/OrderList";
+import OrderingList from "@/components/OrderingList/OrderingList";
 import CustomTabPanel from "@/components/CustomTabPanel/CustomTabPanel";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -19,11 +19,18 @@ import Drawer from "@mui/material/Drawer";
 import AdjustLeverage from "@/components/Drawer/AdjustLeverage/AdjustLeverage";
 import AdjustSlippage from "@/components/Drawer/AdjustSlippage/AdjustSlippage";
 import OrderConfirm from "@/components/Drawer/OrderConfirm/OrderConfirm";
+import useAxios from "@/hooks/useAxios";
+import WebApp from "@twa-dev/sdk";
+import Cookies from "js-cookie";
+import useEncrypt from "@/hooks/useEncrypt";
 
 type Props = {};
 
 const OrderPage = (props: Props) => {
   const routeParams = useLocation();
+  const { post } = useAxios();
+  const { encrypt } = useEncrypt();
+
   if (routeParams && routeParams.state) {
     const { direction } = routeParams.state;
   }
@@ -80,11 +87,10 @@ const OrderPage = (props: Props) => {
   // price
   const [price, setPrice] = useState(0);
   const priceChange = (e) => {
-    if (e.target.value) {
-      const value = e.target.value;
-      if (value > 0 || value === 0) {
-        setPrice(value);
-      }
+    let value: any = e.target.value;
+    value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, '');
+    if (/^\d*\.?\d*$/.test(value) && (value >= 0 || value === '')) {
+      setPrice(value);
     }
   };
   const formatPriceChange = (e) => {
@@ -97,11 +103,10 @@ const OrderPage = (props: Props) => {
   // amount
   const [amount, setAmount] = useState(0);
   const amountChange = (e) => {
-    if (e.target.value) {
-      const value = e.target.value;
-      if (value > 0 || value === 0) {
-        setAmount(value);
-      }
+    let value: any = e.target.value;
+    value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, '');
+    if (/^\d*\.?\d*$/.test(value) && (value >= 0 || value === '')) {
+      setPrice(value);
     }
   };
   const formatAmountChange = (e) => {
@@ -113,24 +118,83 @@ const OrderPage = (props: Props) => {
 
   // balance
   const [balance, setBalance] = useState(0);
+  const [surplus, setSurplus] = useState(0);
+  const getBalance = useCallback(() => {
+    const userId = WebApp.initDataUnsafe?.user?.id || "123123";
+    const address = Cookies.get("address");
+    const signature = encrypt(`${userId}|${address}`);
+    const params = {
+      userId,
+      address,
+      signature,
+    };
+    interface Ires {
+      userId: number;
+      balance: number;
+      availableBalance: number;
+    }
+    post("/user/queryBalance", params).then((res: Ires) => {
+      console.log(res);
+      setBalanceHandler(res.balance, res.availableBalance);
+    });
+  }, []);
+
+  const setBalanceHandler = (balance, available) => {
+    if (!isNaN(Number(balance)) && !isNaN(Number(available))) {
+      setBalance(balance);
+      setSurplus(available);
+    }
+  };
 
   // order
-  const [operation, setOperation] = useState("")
-  const [margin, setMargin] = useState(0)
+  const [operation, setOperation] = useState("");
+  const [margin, setMargin] = useState(0);
   const order = useCallback((operation) => {
     // validate first
-    setOperation(operation)
-    confirmDrawerOpenHandle()
-  },[])
+    setOperation(operation);
+    confirmDrawerOpenHandle();
+  }, []);
 
   const confirmOrder = useCallback(() => {
+    const positionId = ""; // 仓位id，开单的情况下为空
+    const userId = WebApp.initDataUnsafe?.user?.id || 123123;
+    const symbol = tokenSymbol;
+    const orderType = "LIMIT"; // 订单类型（限价单还是市价单）
+    const orderPrice = price; // 价格
+    const orderAmount = amount; // 量
+    const leverage = 25; // 杠杆
+    const direction = "LONG"; // 订单方向（做多还是做空）
+
+    const signature = encrypt(`${userId}`);
+
+    const params = {
+      positionId,
+      userId,
+      symbol,
+      signature,
+      orderType,
+      orderPrice,
+      amount: orderAmount,
+      leverage,
+      direction,
+    };
+    console.log(params);
+    post("/exchange/OpenPerpetualOrder", params).then((res) => {
+      console.log(res);
+      getBalance();
+    });
+
     // send order
-  }, [])
+  }, [price, amount, lever, tokenSymbol]);
 
   // switch direction
   const [selectedDirection, setSelectedDirection] = useState("open");
   const swichOperaDirection = useCallback((direction) => {
     setSelectedDirection(direction);
+  }, []);
+
+  useEffect(() => {
+    getBalance();
   }, []);
 
   return (
@@ -199,7 +263,7 @@ const OrderPage = (props: Props) => {
         <div className="avaiable-amount flex-row">
           <span className="avaiable-amount-title">Available</span>
           <span className="avaiable-amount-value order-base-color">
-            0.00 USDT
+            {surplus} USDT
           </span>
         </div>
 
@@ -247,8 +311,6 @@ const OrderPage = (props: Props) => {
           </div>
         </div>
 
-
-
         {/* <div className="slippage bottom-gap flex-row">
           <span className="slippage-title-intro">Slippage Tolerance</span>
           <span onClick={adjustSlippageOpen}>
@@ -260,7 +322,10 @@ const OrderPage = (props: Props) => {
         <div className="control-buttons">
           {selectedDirection === "open" ? (
             <div className="open-control flex-row">
-              <div className="open-long-button control-button flex-column button-green flex1" onClick={() => order("Open/Long")}>
+              <div
+                className="open-long-button control-button flex-column button-green flex1"
+                onClick={() => order("Open/Long")}
+              >
                 <span className="button-text">Open/Long</span>
                 <span className="calculate-value">≈0.003 BTC</span>
               </div>
@@ -275,7 +340,10 @@ const OrderPage = (props: Props) => {
                 <span className="button-text">Close/Long</span>
                 <span className="calculate-value">≈0.003 BTC</span>
               </div> */}
-              <div className="open-short-button control-button flex-column button-red flex1" onClick={() => order("Close/Short")}>
+              <div
+                className="open-short-button control-button flex-column button-red flex1"
+                onClick={() => order("Close/Short")}
+              >
                 <span className="button-text">Close/Short</span>
                 <span className="calculate-value">≈0.003 BTC</span>
               </div>
@@ -283,39 +351,41 @@ const OrderPage = (props: Props) => {
           )}
         </div>
 
-        <Tabs
-          className="tabs"
-          value={index}
-          onChange={(event, value) => setIndex(value as number)}
-        >
-          <Tab
-            sx={{
-              color: "#333",
-            }}
-            label="Positions"
-          />
-          <Tab
-            sx={{
-              color: "#333",
-            }}
-            label="Orders"
-          />
-          <RiFileList2Fill className="history-list clickable"/>
-        </Tabs>
-        <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
-          <CustomTabPanel value={index} index={0}>
-            <Box>
-              <PositionList />
-            </Box>
-          </CustomTabPanel>
-        </Box>
-        <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
-          <CustomTabPanel value={index} index={1}>
-            <Box>
-              <OrderList />
-            </Box>
-          </CustomTabPanel>
-        </Box>
+        <div className="tab-box">
+          <RiFileList2Fill className="history-list clickable" />
+          <Tabs
+            className="tabs"
+            value={index}
+            onChange={(event, value) => setIndex(value as number)}
+          >
+            <Tab
+              sx={{
+                color: "#333",
+              }}
+              label="Positions"
+            />
+            <Tab
+              sx={{
+                color: "#333",
+              }}
+              label="Orders"
+            />
+          </Tabs>
+          <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
+            <CustomTabPanel value={index} index={0}>
+              <Box>
+                <PositionList />
+              </Box>
+            </CustomTabPanel>
+          </Box>
+          <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
+            <CustomTabPanel value={index} index={1}>
+              <Box>
+                <OrderingList />
+              </Box>
+            </CustomTabPanel>
+          </Box>
+        </div>
       </div>
 
       <Drawer
@@ -333,7 +403,11 @@ const OrderPage = (props: Props) => {
         </div>
       </Drawer>
 
-      <Drawer anchor="bottom" open={slippageOpen} onClose={() => setSlippageOpen(false)}>
+      <Drawer
+        anchor="bottom"
+        open={slippageOpen}
+        onClose={() => setSlippageOpen(false)}
+      >
         <div style={{ height: "50vh" }}>
           <AdjustSlippage
             slippage={slippage}
@@ -343,9 +417,13 @@ const OrderPage = (props: Props) => {
         </div>
       </Drawer>
 
-      <Drawer anchor="bottom" open={confirmDrawerOpen} onClose={() => setConfirmDrawerOpen(false)}>
+      <Drawer
+        anchor="bottom"
+        open={confirmDrawerOpen}
+        onClose={() => setConfirmDrawerOpen(false)}
+      >
         <div style={{ height: "50vh" }}>
-        <OrderConfirm 
+          <OrderConfirm
             operation={operation}
             contract={tokenSymbol}
             price={price}
@@ -353,10 +431,9 @@ const OrderPage = (props: Props) => {
             margin={margin}
             onClose={() => setConfirmDrawerOpen(false)}
             onConfirm={confirmOrder}
-            />
+          />
         </div>
       </Drawer>
-
     </div>
   );
 };
