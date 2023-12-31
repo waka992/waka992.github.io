@@ -4,14 +4,35 @@ import { Button } from "@mui/material";
 import { IoCloseSharp } from "react-icons/io5";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import WebApp from "@twa-dev/sdk";
+import toast from 'react-hot-toast';
+import useAxios from "@/hooks/useAxios";
+import useEncrypt from "@/hooks/useEncrypt";
+import useFormatUSD from "@/hooks/useFormatUSD";
 
 type Props = {
+  item: {
+    symbol: string,
+    leverage: number,
+    pnl: number,
+    roi: number,
+    quantity: number,
+    margin: number,
+    marginRatio: number,
+    entryPrice: number,
+    markPrice: number,
+    liqPrice: number,
+    direction: string
+  };
   onClose: () => void;
-  onConfirm: () => void;
 };
 
 const ClosePosition = (props: Props) => {
-  const tokenSymbol = "BTCUSDT";
+  const {post} = useAxios()
+  const {encrypt} = useEncrypt()
+  const formatusd = useFormatUSD()
+
+  const symbol = props.item.symbol;
   // price
   const [price, setPrice] = useState(0);
   const priceChange = (e) => {
@@ -23,7 +44,7 @@ const ClosePosition = (props: Props) => {
   };
 
   // amount
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(props.item.quantity);
   const amountChange = (e) => {
     let value: any = e.target.value;
     value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, '');
@@ -31,6 +52,39 @@ const ClosePosition = (props: Props) => {
       setAmount(value);
     }
   };
+
+  const confirm = () => {
+    props.onClose()
+    const positionId = "";
+    const userId = WebApp.initDataUnsafe?.user?.id || 123123;
+    const symbol = props.item.symbol;
+    const orderType = "STOP"; // STOP / STOP_MARKET
+    const orderPrice = price;
+    const leverage = props.item.leverage;
+    const direction = props.item.direction.toUpperCase().indexOf("LONG") !== -1 ? "SHORT" : "LONG"; // close position should be opposite
+    const reduceOnly = "false"
+
+    const signature = encrypt(`${userId}`);
+
+    const params = {
+      positionId,
+      userId,
+      symbol,
+      signature,
+      orderType,
+      orderPrice,
+      amount,
+      leverage,
+      direction,
+      reduceOnly
+    };
+    console.log(params)
+    post("/exchange/OpenPerpetualOrder", params).then((res) => {
+    console.log(res);
+      toast.success("Order placed!")
+      // getBalance();
+    });
+  }
 
   return (
     <div className="close-position">
@@ -44,15 +98,15 @@ const ClosePosition = (props: Props) => {
       <div className="confirm-info">
         <div className="contract flex-row close-position-mb">
           <span className="flex1 grey">Contract</span>
-          <span className="flex1 --tar">BTC/USDT</span>
+          <span className="flex1 --tar">{symbol}/{props.item.leverage}</span>
         </div>
         <div className="price flex-row close-position-mb">
-          <span className="flex1 grey">Price</span>
-          <span className="flex1 --tar">10 USDT</span>
+          <span className="flex1 grey">Entry Price</span>
+          <span className="flex1 --tar">{formatusd(props.item.entryPrice)}</span>
         </div>
         <div className="amount flex-row close-position-mb">
           <span className="flex1 grey">Mark Price</span>
-          <span className="flex1 --tar">20 USDT</span>
+          <span className="flex1 --tar">{formatusd(props.item.markPrice)}</span>
         </div>
       </div>
 
@@ -86,7 +140,7 @@ const ClosePosition = (props: Props) => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  {tokenSymbol.slice(0, -4)}
+                  {symbol.slice(0, -4)}
                 </InputAdornment>
               ),
             }}
@@ -98,11 +152,11 @@ const ClosePosition = (props: Props) => {
       <div className="position-info close-position-mb2">
       <div className="contract flex-row close-position-mb">
           <span className="flex1 grey">Position Amount</span>
-          <span className="flex1 --tar">{0.100} {tokenSymbol.slice(0, -4)}</span>
+          <span className="flex1 --tar">{props.item.quantity} {symbol.slice(0, -4)}</span>
         </div>
         <div className="price flex-row close-position-mb">
           <span className="flex1 grey">Estimated PNL</span>
-          <span className={`flex1 --tar --ischange ${price > 0 ? "up" : "down"}`}>-11.28 USDT</span>
+          <span className={`flex1 --tar --ischange ${props.item.pnl > 0 ? "up" : "down"}`}>{props.item.pnl} USDT</span>
         </div>
       </div>
 
@@ -111,7 +165,7 @@ const ClosePosition = (props: Props) => {
           color="success"
           className="confirm-button"
           variant="contained"
-          onClick={props.onConfirm}
+          onClick={confirm}
         >
           Confirm
         </Button>

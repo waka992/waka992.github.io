@@ -1,12 +1,16 @@
 .order-page {
     padding: 0 10px;
+    overflow: auto;
 
     .order-base-color {
         color: var(--black);
     }
 
     .bottom-gap {
-        margin-bottom: 12px;
+        margin-bottom: 10px;
+    }
+    .order-info,.direction,.value-box {
+        margin-bottom: 30px;
     }
 
     .order-token-control {
@@ -83,7 +87,6 @@
     }
 
     .value-box {
-
         .price-input-box,
         .amount-input-box {
             position: relative;
@@ -174,6 +177,7 @@
             right: 0;
             top: 16px;
             color: var(--grey);
+            z-index: 99;
         }
     }
 }

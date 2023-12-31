@@ -15,7 +15,7 @@
     .token-info {
         position: relative;
 
-        .direction,
+        .order-direction,
         .token-name,
         .leverage {
             display: inline-block;
@@ -23,7 +23,7 @@
             margin-right: 6px;
         }
 
-        .direction {
+        .order-direction {
             color: white;
             border-radius: 2px;
             display: inline-block;

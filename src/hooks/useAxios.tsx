@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import useEncrypt from "./useEncrypt";
-import { toast } from "react-toastify";
+import toast from 'react-hot-toast';
 import qs from "qs";
 
 const useAxios = () => {

@@ -3,7 +3,7 @@ import "./OrderPage.scss";
 import "@/styles/Tabs.css";
 import TokenSwitch from "@/components/TokenSwitch/TokenSwitch";
 import { FaCaretDown } from "react-icons/fa6";
-import { FiEdit } from "react-icons/fi";
+// import { FiEdit } from "react-icons/fi";
 import { RiFileList2Fill } from "react-icons/ri";
 import { MdCandlestickChart } from "react-icons/md";
 import Tabs from "@mui/material/Tabs";
@@ -14,7 +14,7 @@ import OrderingList from "@/components/OrderingList/OrderingList";
 import CustomTabPanel from "@/components/CustomTabPanel/CustomTabPanel";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
 import AdjustLeverage from "@/components/Drawer/AdjustLeverage/AdjustLeverage";
 import AdjustSlippage from "@/components/Drawer/AdjustSlippage/AdjustSlippage";
@@ -23,17 +23,17 @@ import useAxios from "@/hooks/useAxios";
 import WebApp from "@twa-dev/sdk";
 import Cookies from "js-cookie";
 import useEncrypt from "@/hooks/useEncrypt";
+import toast from "react-hot-toast";
 
-type Props = {};
 
-const OrderPage = (props: Props) => {
-  const routeParams = useLocation();
+const OrderPage = () => {
+  // const routeParams = useLocation();
   const { post } = useAxios();
   const { encrypt } = useEncrypt();
 
-  if (routeParams && routeParams.state) {
-    const { direction } = routeParams.state;
-  }
+  // if (routeParams && routeParams.state) {
+  //   const { direction } = routeParams.state;
+  // }
   const nav = useNavigate();
 
   const [index, setIndex] = React.useState(0);
@@ -48,6 +48,10 @@ const OrderPage = (props: Props) => {
     nav("/wallet");
   }, []);
 
+  const navToHistory = useCallback(() => {
+    nav("/history");
+  }, []);
+
   // drawer
   const [open, setOpen] = useState(false);
   const adjustLeverageOpen = useCallback(() => {
@@ -55,9 +59,9 @@ const OrderPage = (props: Props) => {
   }, []);
 
   const [slippageOpen, setSlippageOpen] = useState(false);
-  const adjustSlippageOpen = useCallback(() => {
-    setSlippageOpen(!slippageOpen);
-  }, []);
+  // const adjustSlippageOpen = useCallback(() => {
+  //   setSlippageOpen(!slippageOpen);
+  // }, []);
 
   const [confirmDrawerOpen, setConfirmDrawerOpen] = useState(false);
   const confirmDrawerOpenHandle = useCallback(() => {
@@ -148,7 +152,7 @@ const OrderPage = (props: Props) => {
 
   // order
   const [operation, setOperation] = useState("");
-  const [margin, setMargin] = useState(0);
+  const [margin, setMargin] = useState(0); // 保证金
   const order = useCallback((operation) => {
     // validate first
     setOperation(operation);
@@ -159,11 +163,12 @@ const OrderPage = (props: Props) => {
     const positionId = ""; // 仓位id，开单的情况下为空
     const userId = WebApp.initDataUnsafe?.user?.id || 123123;
     const symbol = tokenSymbol;
-    const orderType = "LIMIT"; // 订单类型（限价单还是市价单）
-    const orderPrice = price; // 价格
-    const orderAmount = amount; // 量
-    const leverage = 25; // 杠杆
-    const direction = "LONG"; // 订单方向（做多还是做空）
+    const orderType = "LIMIT";
+    const orderPrice = price;
+    const orderAmount = amount;
+    const leverage = 25;
+    const direction = selectedDirection === "open" ? "LONG" : "SHORT";
+    const reduceOnly = "true" // open => true, close => false
 
     const signature = encrypt(`${userId}`);
 
@@ -177,10 +182,12 @@ const OrderPage = (props: Props) => {
       amount: orderAmount,
       leverage,
       direction,
+      reduceOnly
     };
     console.log(params);
     post("/exchange/OpenPerpetualOrder", params).then((res) => {
       console.log(res);
+      toast.success("Order placed!")
       getBalance();
     });
 
@@ -274,7 +281,7 @@ const OrderPage = (props: Props) => {
           </span>
         </div>
 
-        <div className="value-box bottom-gap">
+        <div className="value-box">
           <div className="value-input flex-row">
             <div className="price-input-box flex1">
               <TextField
@@ -352,7 +359,7 @@ const OrderPage = (props: Props) => {
         </div>
 
         <div className="tab-box">
-          <RiFileList2Fill className="history-list clickable" />
+          <RiFileList2Fill className="history-list clickable" onClick={navToHistory}/>
           <Tabs
             className="tabs"
             value={index}
@@ -374,14 +381,14 @@ const OrderPage = (props: Props) => {
           <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
             <CustomTabPanel value={index} index={0}>
               <Box>
-                <PositionList />
+                <MemoizedPositionList control={true}/>
               </Box>
             </CustomTabPanel>
           </Box>
           <Box className="tabs-info flex1 flex-column" sx={{ padding: 0 }}>
             <CustomTabPanel value={index} index={1}>
               <Box>
-                <OrderingList />
+                <MemoizedOrderingList />
               </Box>
             </CustomTabPanel>
           </Box>
@@ -438,4 +445,6 @@ const OrderPage = (props: Props) => {
   );
 };
 
+const MemoizedPositionList = React.memo(PositionList)
+const MemoizedOrderingList = React.memo(OrderingList)
 export default OrderPage;

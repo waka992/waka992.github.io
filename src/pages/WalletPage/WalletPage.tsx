@@ -43,7 +43,7 @@ const WalletPage = () => {
       >
         <CustomTabPanel value={index} index={0}>
           <Box>
-            <PositionList control={true} />
+            <PositionList  />
           </Box>
         </CustomTabPanel>
       </Box>

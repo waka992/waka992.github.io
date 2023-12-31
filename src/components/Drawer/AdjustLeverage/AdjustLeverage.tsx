@@ -72,15 +72,18 @@ const AdjustLeverage = (props: Props) => {
         />
       </div>
       <div className="leverage-range">
-        <Slider
-          value={lever}
-          onChange={adjustLeverageChange}
-          step={1}
-          marks={marks}
-          min={1}
-          max={125}
-          valueLabelDisplay="auto"
-        />
+        {
+          lever && 
+          <Slider
+            value={lever}
+            onChange={adjustLeverageChange}
+            step={1}
+            marks={marks}
+            min={1}
+            max={125}
+            valueLabelDisplay="auto"
+          />
+        }
       </div>
       {/* <div className="limit-text">
       • Maximum position at current leverage: 250,000 USDT

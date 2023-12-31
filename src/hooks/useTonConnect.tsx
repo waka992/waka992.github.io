@@ -4,8 +4,8 @@ import {
   UserRejectsError,
   WalletInfo,
 } from "@tonconnect/sdk";
-import { toast } from "react-toastify";
 import { isMobile, openLink } from "@/utils/utils";
+import toast from 'react-hot-toast';
 
 const dappMetadata = {
   manifestUrl:

@@ -1,14 +1,14 @@
 // modules
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import eruda from "eruda";
 import WebApp from "@twa-dev/sdk";
 import { Routes, Route, HashRouter, Navigate } from "react-router-dom";
 import GlobalContext from "@/store/global-context";
-import { ToastContainer } from "react-toastify";
+import { Toaster } from 'react-hot-toast';
 // style
 import "./App.css";
 import "@/styles/Shared.css";
-import "react-toastify/dist/ReactToastify.css";
+// import "react-toastify/dist/ReactToastify.css";
 
 // components
 import TopBar from "./pages/TopBar/TopBar";
@@ -16,6 +16,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import WalletPage from "./pages/WalletPage/WalletPage";
 import MarketPage from "./pages/MarketPage/MarketPage";
 import OrderPage from "./pages/OrderPage/OrderPage";
+import HistoryPage from "./pages/HistoryPage/HistoryPage";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 // hooks
 import useEncrypt from "@/hooks/useEncrypt";
@@ -23,6 +24,7 @@ import useEncrypt from "@/hooks/useEncrypt";
 import WithWebsocket from "@/hoc/withWebsocket.tsx";
 
 function App(props) {
+  console.log("app start")
   const {
     sendMessage,
     sendJsonMessage,
@@ -36,9 +38,9 @@ function App(props) {
   const [userId, setUserId] = useState("");
 
 
-  const setUserIdHandler = (id) => {
+  const setUserIdHandler = useCallback((id) => {
     setUserId(id);
-  };
+  }, [])
 
 
   useEffect(() => {
@@ -71,23 +73,15 @@ function App(props) {
               <Route path={"/market"} element={<MarketPage />} />
               <Route path={"/wallet"} element={<WalletPage />} />
               <Route path={"/trade"} element={<OrderPage />} />
+              <Route path={"/history"} element={<HistoryPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
-              {/* <Route path={"/auth"} element={<AuthPage />} /> */}
             </Routes>
           </HashRouter>
         </TonConnectUIProvider>
       </GlobalContext.Provider>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
+      <Toaster
+         position="top-center"
+         reverseOrder={false}
       />
     </div>
   );
