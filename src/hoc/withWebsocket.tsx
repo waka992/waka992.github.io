@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 const WithWebsocket = (WrappedComponent) => {
   const WrappedComponentWithModel = (props) => {
     const userid = WebApp.initDataUnsafe?.user?.id || 123123;
-    const socketUrl = `ws://127.0.0.1:443/ws/${userid}`;
+    const socketUrl = `ws://127.0.0.1:8088/ws/${userid}`;
 
     const {
       sendMessage,
