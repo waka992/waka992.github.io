@@ -38,7 +38,7 @@ const OrderingList = (props: Props) => {
     const userId = WebApp.initDataUnsafe?.user?.id || 123123;
     const orderId = id;
     const symbol = sym;
-    const signature = encrypt(`${userId}`);
+    const signature = encrypt(`${userId}|${orderId}`);
 
     const params = {
       userId,
@@ -49,7 +49,7 @@ const OrderingList = (props: Props) => {
     console.log(params);
     post("/exchange/cancelOrder", params).then((res) => {
       console.log(res);
-      toast.success("Order placed!");
+      toast.success("Order canceled!");
       // getBalance();
     });
   };

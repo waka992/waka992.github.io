@@ -20,7 +20,7 @@ const HistoryPage = () => {
     {
       symbol: "BTCUSDT",
       time: "2023-12-21 09:53:15",
-      status: "cancelled",
+      status: "canceled",
       direction: "BUY",
       orderQuantity: 0,
       orderPrice: 42921.96,
@@ -47,7 +47,7 @@ const HistoryPage = () => {
       <div className="history-list">
         {historyList.map((item, index) => (
           <div className="history-item" key={index}>
-            
+
           </div>
         ))}
       </div>
