@@ -4,12 +4,13 @@ import Skeleton from "@mui/material/Skeleton";
 import useEncrypt from "@/hooks/useEncrypt";
 
 const WithWebsocket = (WrappedComponent) => {
-  const WrappedComponentWithModel = (props) => {
-    const { encrypt } = useEncrypt();
-    const userid = WebApp.initDataUnsafe?.user?.id || 123123;
-    const encryptUserid = encrypt(userid)
-    const socketUrl = `ws://127.0.0.1:8088/ws/${encryptUserid}`;
+  const { encrypt } = useEncrypt();
+  const userid = WebApp.initDataUnsafe?.user?.id || 123123;
+  const encryptUserid = encrypt(userid)
+  console.log(encryptUserid)
 
+  const WrappedComponentWithModel = (props) => {
+    const socketUrl = `ws://127.0.0.1:8088/ws/${encryptUserid}`;
     const {
       sendMessage,
       sendJsonMessage,
