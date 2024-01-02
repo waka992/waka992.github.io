@@ -1,4 +1,6 @@
 .history-page {
+    color: var(--grey);
+
     .history-header {
         position: relative;
         text-align: center;
@@ -8,14 +10,33 @@
         .back-button {
             position: absolute;
             color: var(--grey);
-            width: 30px;
             left: 10px;
             top: 26px;
         }
-    
+
         .history-title {
             font-size: 16px;
             color: var(--black);
+        }
+    }
+
+    .history-list {
+        padding: 0 10px;
+        .symbol-info,
+        .trade-info,
+        .quantity-info,
+        .price-info {
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .symbol-box {
+            font-size: 16px;
+            color: var(--black);
+        }
+        .time-box {
+            font-size: 11px;
+            letter-spacing: 0;
         }
     }
 }

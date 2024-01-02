@@ -16,17 +16,21 @@ const PositionList = (props: Props) => {
   const globalCtx = useContext(GlobalContext)
   const [tradeList, setTradeList] = useState([
     {
+      positionId: 0,
+      userId: 0,
       symbol: "BTCUSDT",
       direction: "LONG",
       leverage: 50,
-      pnl: -2.23,
-      roi: -7.15,
       quantity: 0.02,
       margin: 29.7,
-      marginRatio: 11.34,
+      marginRate: 0,
+      fee:0,
       entryPrice: 42987.6,
       markPrice: 42987.7,
-      liqPrice: 42987.8,
+      forcePrice: 42987.8,
+      positionStatus: 0,
+      unrealizedProfit: 0,
+      roi: 0,
     },
   ]);
   const [selectedItem, setSelectItem] = useState(0)
@@ -54,7 +58,11 @@ const PositionList = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    console.log(globalCtx.lastMessage)
+    console.log("websocket lastMessage:", globalCtx.lastMessage)
+    if (globalCtx.lastMessage !== null) {
+      const positionList = globalCtx.lastMessage.position
+      setTradeList(positionList)
+    }
   }, [globalCtx.lastMessage])
 
   return (
@@ -71,15 +79,15 @@ const PositionList = (props: Props) => {
             <div className="profit-loss flex-column">
               <span>PNL</span>
               <span
-                className={`pnl-value --ischange ${item.pnl > 0 ? "up" : "down"}`}
+                className={`pnl-value --ischange ${item.unrealizedProfit >= 0 ? "up" : "down"}`}
               >
-                {item.pnl}
+                {item.unrealizedProfit}
               </span>
             </div>
             <div className="roi flex-column">
               <span>ROI</span>
               <span
-                className={`roi-value --ischange ${item.roi > 0 ? "up" : "down"}`}
+                className={`roi-value --ischange ${item.roi >= 0 ? "up" : "down"}`}
               >
                 {item.roi}
               </span>
@@ -104,10 +112,10 @@ const PositionList = (props: Props) => {
                 <span>Margin Ratio</span>
                 <span
                   className={`margin-ratio-value --ischange value-font-size ${
-                    item.marginRatio > 0 ? "up" : "down"
+                    item.marginRate >= 0 ? "up" : "down"
                   }`}
                 >
-                  {item.marginRatio}
+                  {item.marginRate}
                 </span>
               </div>
             </div>
@@ -127,7 +135,7 @@ const PositionList = (props: Props) => {
               <div className="liq-price flex-column">
                 <span>Liq.Price(USDT)</span>
                 <span className="liq-price-value value-font-size">
-                  {formatusd(item.liqPrice)}
+                  {formatusd(item.forcePrice)}
                 </span>
               </div>
             </div>
