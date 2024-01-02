@@ -1,13 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./TopBar.scss";
 import ConnectButton from "@/components/ConnectButton/ConnectButton";
 import { FaBars } from "react-icons/fa6";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TopBar = () => {
   const nav = useNavigate()
+  const location = useLocation()
   const routeList = [
     {name:"Home", route: "/"},
     {name:"Market", route: "/market"},
@@ -15,12 +16,25 @@ const TopBar = () => {
     {name:"Wallet",route: "/wallet"},
   ]
   const [open, setOpen] = useState(false);
+  const [showBar, setShowBar] = useState(true)
   const switchPage = useCallback((route) => {
     setOpen(false)
     nav(route)
   }, [])
 
+  useEffect(() => {
+    console.log(location.pathname)
+    const {pathname} = location
+    if (pathname.indexOf("history") !== -1) {
+      setShowBar(false)
+    }
+    else {
+      setShowBar(true)
+    }
+  }, [location])
+
   return (
+    showBar && (
     <div className="top-bar">
       {/* <header className="title">BEST BIT</header> */}
       <ConnectButton />
@@ -42,7 +56,7 @@ const TopBar = () => {
           </div>
         </div>
       </Drawer>
-    </div>
+    </div>)
   );
 };
 

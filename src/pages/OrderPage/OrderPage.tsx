@@ -110,7 +110,7 @@ const OrderPage = () => {
     let value: any = e.target.value;
     value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, '');
     if (/^\d*\.?\d*$/.test(value) && (value >= 0 || value === '')) {
-      setPrice(value);
+      setAmount(value);
     }
   };
   const formatAmountChange = (e) => {
