@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import "./PositionList.scss";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import AdjustLeverage from "../Drawer/AdjustLeverage/AdjustLeverage";
 import ClosePosition from "../Drawer/ClosePosition/ClosePosition";
 import useFormatUSD from "@/hooks/useFormatUSD";
+import GlobalContext from "@/store/global-context";
 
 interface Props {
   control?: boolean;
@@ -12,6 +13,7 @@ interface Props {
 
 const PositionList = (props: Props) => {
   const formatusd = useFormatUSD();
+  const globalCtx = useContext(GlobalContext)
   const [tradeList, setTradeList] = useState([
     {
       symbol: "BTCUSDT",
@@ -50,6 +52,10 @@ const PositionList = (props: Props) => {
     setSelectItemObject(tradeList[index])
     setPositionOpen(true);
   }, []);
+
+  useEffect(() => {
+    console.log(globalCtx.lastMessage)
+  }, [globalCtx.lastMessage])
 
   return (
     <div className="position-list flex-column">

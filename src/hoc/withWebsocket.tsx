@@ -1,12 +1,14 @@
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import WebApp from "@twa-dev/sdk";
 import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
+import useEncrypt from "@/hooks/useEncrypt";
 
 const WithWebsocket = (WrappedComponent) => {
   const WrappedComponentWithModel = (props) => {
+    const { encrypt } = useEncrypt();
     const userid = WebApp.initDataUnsafe?.user?.id || 123123;
-    const socketUrl = `ws://127.0.0.1:8088/ws/${userid}`;
+    const encryptUserid = encrypt(userid)
+    const socketUrl = `ws://127.0.0.1:8088/ws/${encryptUserid}`;
 
     const {
       sendMessage,
@@ -32,46 +34,52 @@ const WithWebsocket = (WrappedComponent) => {
     if (connectionStatus == "Connecting") {
       // skeleton
       return (
-        <div style={{
-          marginTop: "86px",
-          paddingLeft:"20px"
-        }}>
-       
-            {/* For variant="text", adjust the height via font-size */}
-            <Skeleton
-              variant="rectangular"
-              width={"90vw"}
-              height={"20vh"}
-              sx={{
-                borderRadius: "10px"
-              }}
-              animation="wave"
-            />
+        <div
+          style={{
+            marginTop: "86px",
+            paddingLeft: "20px",
+          }}
+        >
+          {/* For variant="text", adjust the height via font-size */}
+          <Skeleton
+            variant="rectangular"
+            width={"90vw"}
+            height={"20vh"}
+            sx={{
+              borderRadius: "10px",
+            }}
+            animation="wave"
+          />
 
-            <Skeleton variant="text" width={"90vw"} height={"28px"} sx={{ marginTop:"100px",borderRadius: "10px" }} />
+          <Skeleton
+            variant="text"
+            width={"90vw"}
+            height={"28px"}
+            sx={{ marginTop: "100px", borderRadius: "10px" }}
+          />
 
-            {/* For other variants, adjust the size with `width` and `height` */}
-            <Skeleton
-              variant="rectangular"
-              width={210}
-              height={"62px"}
-              sx={{ marginTop:"14px", borderRadius: "10px" }}
-              animation="wave"
-            />
-            <Skeleton
-              variant="rectangular"
-              width={210}
-              height={"62px"}
-              sx={{ marginTop:"14px", borderRadius: "10px" }}
-              animation="wave"
-            />
-            <Skeleton
-              variant="rectangular"
-              width={210}
-              height={"62px"}
-              sx={{ marginTop:"14px", borderRadius: "10px" }}
-              animation="wave"
-            />
+          {/* For other variants, adjust the size with `width` and `height` */}
+          <Skeleton
+            variant="rectangular"
+            width={210}
+            height={"62px"}
+            sx={{ marginTop: "14px", borderRadius: "10px" }}
+            animation="wave"
+          />
+          <Skeleton
+            variant="rectangular"
+            width={210}
+            height={"62px"}
+            sx={{ marginTop: "14px", borderRadius: "10px" }}
+            animation="wave"
+          />
+          <Skeleton
+            variant="rectangular"
+            width={210}
+            height={"62px"}
+            sx={{ marginTop: "14px", borderRadius: "10px" }}
+            animation="wave"
+          />
         </div>
       );
     }
