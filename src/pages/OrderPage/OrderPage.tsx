@@ -139,7 +139,12 @@ const OrderPage = () => {
     }
     post("/user/queryBalance", params).then((res: Ires) => {
       console.log(res);
-      setBalanceHandler(res.balance, res.availableBalance);
+      if (res) {
+        setBalanceHandler(res.balance, res.availableBalance);
+      }
+      else {
+        setBalanceHandler(0, 0);
+      }
     });
   }, []);
 
