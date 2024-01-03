@@ -67,6 +67,9 @@ input {
   --grey: #aaa;
   --green: #48CB81;
   --red: #F4465D;
+  --light-grey: #aaaaaa28;
+  --light-green: #48cb8128;
+  --light-red: #F4465D28;
 }
 
 .--ischange.up {

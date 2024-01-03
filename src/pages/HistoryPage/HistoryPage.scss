@@ -22,6 +22,11 @@
 
     .history-list {
         padding: 0 10px;
+
+        .history-item {
+            margin-bottom: 16px;
+        }
+
         .symbol-info,
         .trade-info,
         .quantity-info,
@@ -37,6 +42,32 @@
         .time-box {
             font-size: 11px;
             letter-spacing: 0;
+        }
+
+        .side-box,.status-box {
+            font-size: 12px;
+            &.up {
+                color: var(--green);
+            }
+            &.down {
+                color: var(--red);
+            }
+            &.cancel {
+                color: var(--grey);
+            }
+        }
+        .status-box {
+            padding: 0 4px;
+            border-radius: 4px;
+            &.up {
+                background-color: var(--light-green);
+            }
+            &.down {
+                background-color: var(--light-green);
+            }
+            &.cancel {
+                background-color: var(--light-grey);
+            }
         }
     }
 }

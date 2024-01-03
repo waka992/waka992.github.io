@@ -12,28 +12,28 @@ const HistoryPage = () => {
     {
       symbol: "BTCUSDT",
       time: "2023-12-21 09:53:15",
-      status: "ALL",
+      status: "Filled",
       side: "BUY",
       filled: 0.05,
       amount: 0.05,
       orderQuantity: 0,
       orderPrice: 42921.96,
-      finalPrice: 42921.96
+      finalPrice: 42921.96,
     },
     {
       symbol: "BTCUSDT",
       time: "2023-12-21 09:53:15",
-      status: "CANCELED",
+      status: "Canceled",
       side: "BUY",
       filled: 0,
       amount: 0.1,
       orderPrice: 42921.96,
-      finalPrice: 42921.96
+      finalPrice: 42921.96,
     },
     {
       symbol: "BTCUSDT",
       time: "2023-12-21 09:53:15",
-      status: "ALL/FORCED LIQUIDATION",
+      status: "Filled/Liquidation",
       side: "SELL",
       filled: 0.2,
       amount: 0.2,
@@ -58,8 +58,20 @@ const HistoryPage = () => {
               <div className="time-box">{item.time}</div>
             </div>
             <div className="trade-info flex-row">
-              <div className="side-box">{item.side.toUpperCase()}</div>
-              <div className="status-box">{item.status}</div>
+              <div
+                className={`side-box ${
+                  item.side.toUpperCase().indexOf("BUY") !== -1 ? "up" : "down"
+                }`}
+              >
+                {item.side.toUpperCase()}
+              </div>
+              <div
+                className={`status-box ${
+                  item.status.toUpperCase().indexOf("FILLED") !== -1 ? "up" : "cancel"
+                }`}
+              >
+                {item.status}
+              </div>
             </div>
             <div className="quantity-info flex-row">
               <div className="quantity-desc">

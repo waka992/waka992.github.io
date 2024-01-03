@@ -2,14 +2,30 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import WebApp from "@twa-dev/sdk";
 import Skeleton from "@mui/material/Skeleton";
 import useEncrypt from "@/hooks/useEncrypt";
+import { useCallback } from "react";
+import useAxios from "@/hooks/useAxios";
 
 const WithWebsocket = (WrappedComponent) => {
   const { encrypt } = useEncrypt();
   const userid = WebApp.initDataUnsafe?.user?.id || 123123;
-  const encryptUserid = encodeURIComponent(encrypt(userid))
+  const { post } = useAxios();
+  const encryptUserid = encrypt(userid);
 
   const WrappedComponentWithModel = (props) => {
-    const socketUrl = `ws://127.0.0.1:8088/ws/${encryptUserid}`;
+    const getSocketUrl = useCallback(() => {
+      return new Promise((resolve) => {
+        const params = {
+          userId: userid,
+          signature: encryptUserid,
+        };
+        post("/listenkey", params).then((res) => {
+          console.log(res);
+          resolve(`ws://127.0.0.1:8088/ws/${res}`);
+        });
+      });
+    }, []);
+
+    const socketUrl: any = getSocketUrl;
     const {
       sendMessage,
       sendJsonMessage,
@@ -31,58 +47,56 @@ const WithWebsocket = (WrappedComponent) => {
     }[readyState];
     console.log(connectionStatus);
 
-    if (connectionStatus == "Connecting") {
-      // skeleton
-      return (
-        <div
-          style={{
-            marginTop: "86px",
-            paddingLeft: "20px",
-          }}
-        >
-          {/* For variant="text", adjust the height via font-size */}
-          <Skeleton
-            variant="rectangular"
-            width={"90vw"}
-            height={"20vh"}
-            sx={{
-              borderRadius: "10px",
-            }}
-            animation="wave"
-          />
+    // if (connectionStatus == "Connecting") {
+    //   // skeleton
+    //   return (
+    //     <div
+    //       style={{
+    //         marginTop: "86px",
+    //         paddingLeft: "20px",
+    //       }}
+    //     >
+    //       <Skeleton
+    //         variant="rectangular"
+    //         width={"90vw"}
+    //         height={"20vh"}
+    //         sx={{
+    //           borderRadius: "10px",
+    //         }}
+    //         animation="wave"
+    //       />
 
-          <Skeleton
-            variant="text"
-            width={"90vw"}
-            height={"28px"}
-            sx={{ marginTop: "100px", borderRadius: "10px" }}
-          />
+    //       <Skeleton
+    //         variant="text"
+    //         width={"90vw"}
+    //         height={"28px"}
+    //         sx={{ marginTop: "100px", borderRadius: "10px" }}
+    //       />
 
-          {/* For other variants, adjust the size with `width` and `height` */}
-          <Skeleton
-            variant="rectangular"
-            width={210}
-            height={"62px"}
-            sx={{ marginTop: "14px", borderRadius: "10px" }}
-            animation="wave"
-          />
-          <Skeleton
-            variant="rectangular"
-            width={210}
-            height={"62px"}
-            sx={{ marginTop: "14px", borderRadius: "10px" }}
-            animation="wave"
-          />
-          <Skeleton
-            variant="rectangular"
-            width={210}
-            height={"62px"}
-            sx={{ marginTop: "14px", borderRadius: "10px" }}
-            animation="wave"
-          />
-        </div>
-      );
-    }
+    //       <Skeleton
+    //         variant="rectangular"
+    //         width={210}
+    //         height={"62px"}
+    //         sx={{ marginTop: "14px", borderRadius: "10px" }}
+    //         animation="wave"
+    //       />
+    //       <Skeleton
+    //         variant="rectangular"
+    //         width={210}
+    //         height={"62px"}
+    //         sx={{ marginTop: "14px", borderRadius: "10px" }}
+    //         animation="wave"
+    //       />
+    //       <Skeleton
+    //         variant="rectangular"
+    //         width={210}
+    //         height={"62px"}
+    //         sx={{ marginTop: "14px", borderRadius: "10px" }}
+    //         animation="wave"
+    //       />
+    //     </div>
+    //   );
+    // }
 
     return (
       <WrappedComponent
