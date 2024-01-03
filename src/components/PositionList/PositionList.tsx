@@ -21,7 +21,7 @@ const PositionList = (props: Props) => {
       // symbol: "BTCUSDT",
       // direction: "LONG",
       // leverage: 50,
-      // quantity: 0.02,
+      // positionAmt: 0.02,
       // margin: 29.7,
       // marginRate: 0,
       // fee:0,
@@ -56,18 +56,63 @@ const PositionList = (props: Props) => {
     setSelectItemObject(tradeList[index])
     setPositionOpen(true);
   }, []);
+  
+  const handlePositionData = (data) => {
+    console.log("websocket lastMessage:", data)
+    if (data) {
+      console.log("websocket lastMessage data", data.data)
+    }
 
-  useEffect(() => {
-    console.log("websocket lastMessage:", globalCtx.lastMessage)
-    if (globalCtx.lastMessage !== null) {
-      const positionList = globalCtx.lastMessage.position
-      if (positionList) {
-        setTradeList(positionList)
+
+    if (data !== null) {
+      const dataString = data?.data || ""
+      // dataString = JSON.stringify({
+      //   "id": 135,
+      //   "positionId": "1192123005287923712",
+      //   "userId": 123123,
+      //   "symbol": "BTCUSDT",
+      //   "postionSide": "LONG",
+      //   "entryPrice": 45081,
+      //   "closePrice": -241.5,
+      //   "leverage": 25,
+      //   "positionAmt": 0.020,
+      //   "positionStatus": "OPEN",
+      //   "margin": 36.258,
+      //   "maintenanceMargin": 3.626,
+      //   "fee": 2.266,
+      //   "marginRate": 0.090,
+      //   "forcePrice": 43268.100,
+      //   "unrealizedProfit": 0.21000,
+      //   "marginBalance": 40.09400,
+      //   "updateTime": {
+      //     "seconds": 1704266155,
+      //     "nanos": 734000000
+      //   },
+      //   "createTime": {
+      //     "seconds": 1704266043,
+      //     "nanos": 906000000
+      //   }
+      // })
+      if (dataString) {
+        const result = JSON.parse(dataString)
+        const indexResult = tradeList.findIndex(item => item.positionId == result.positionId)
+        const list = [...tradeList]
+        if (indexResult !== -1) {
+          list[indexResult] = result
+        }
+        else {
+          list.push(result)
+        }
+        setTradeList(list)
       }
       else {
         setTradeList([])
       }
     }
+  }
+
+  useEffect(() => {
+    handlePositionData(globalCtx.lastMessage)
   }, [globalCtx.lastMessage])
 
   return (
@@ -75,7 +120,7 @@ const PositionList = (props: Props) => {
       {tradeList.map((item, index) => (
         <div className="position-item" key={index}>
           <div className="token-info position-mb">
-            <div className={`position-direction ${item.direction.indexOf("LONG") !== -1 ? "up" : "down"}`}></div>
+            <div className={`position-direction ${item.direction?.indexOf("LONG") !== -1 ? "up" : "down"}`}></div>
             <div className="token-name">{item.symbol}</div>
             <div className="leverage">{item.leverage}X</div>
           </div>
@@ -103,7 +148,7 @@ const PositionList = (props: Props) => {
             <div className="position-detail-first position-mb flex-row">
               <div className="amount flex-column">
                 <span>Quantity(BTC)</span>
-                <span className="amount-value value-font-size">{item.quantity}</span>
+                <span className="amount-value value-font-size">{item.positionAmt}</span>
               </div>
 
               <div className="margin flex-column">

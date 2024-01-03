@@ -6,7 +6,7 @@ const GlobalContext = React.createContext({
   setUserIdHandler: (number) => {},
   sendMessage: () => {},
   sendJsonMessage: () => {},
-  lastMessage: {position:[]},
+  lastMessage: {data:""},
   lastJsonMessage: () => {},
   readyState: () => {},
   getWebSocket: () => {},
