@@ -2,30 +2,25 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import WebApp from "@twa-dev/sdk";
 import Skeleton from "@mui/material/Skeleton";
 import useEncrypt from "@/hooks/useEncrypt";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useAxios from "@/hooks/useAxios";
 
 const WithWebsocket = (WrappedComponent) => {
   const { encrypt } = useEncrypt();
-  const userid = WebApp.initDataUnsafe?.user?.id || 123123;
   const { post } = useAxios();
-  const encryptUserid = encrypt(userid);
 
   const WrappedComponentWithModel = (props) => {
+    const [socketUrl, setSocketUrl] = useState("");
     const getSocketUrl = useCallback(() => {
       return new Promise((resolve) => {
-        const params = {
-          userId: userid,
-          signature: encryptUserid,
-        };
-        post("/listenkey", params).then((res) => {
-          console.log(res);
-          resolve(`ws://127.0.0.1:8088/ws/${res}`);
-        });
+        if (socketUrl) {
+          setTimeout(() => {
+            resolve(`ws://127.0.0.1:8088/ws/${socketUrl}`);
+          }, 0);
+        }
       });
-    }, []);
+    }, [socketUrl]);
 
-    const socketUrl: any = getSocketUrl;
     const {
       sendMessage,
       sendJsonMessage,
@@ -33,7 +28,7 @@ const WithWebsocket = (WrappedComponent) => {
       lastJsonMessage,
       readyState,
       getWebSocket,
-    } = useWebSocket(socketUrl, {
+    } = useWebSocket(getSocketUrl as any, {
       onOpen: () => console.log("websocket opened"),
       //Will attempt to reconnect on all close events, such as server shutting down
       shouldReconnect: (closeEvent) => false,
@@ -47,6 +42,18 @@ const WithWebsocket = (WrappedComponent) => {
     }[readyState];
     console.log(connectionStatus);
 
+    useEffect(() => {
+      const userid = WebApp.initDataUnsafe?.user?.id || 123123;
+      const encryptUserid = encrypt(userid);
+      const params = {
+        userId: userid,
+        signature: encryptUserid,
+      };
+      post("/listenkey", params).then((res: string) => {
+        console.log("res", res);
+        setSocketUrl(res);
+      });
+    }, []);
     // if (connectionStatus == "Connecting") {
     //   // skeleton
     //   return (
