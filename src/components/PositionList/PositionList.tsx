@@ -94,16 +94,21 @@ const PositionList = (props: Props) => {
       //   }
       // })
       if (dataString) {
-        const result = JSON.parse(dataString)
-        const indexResult = tradeList.findIndex(item => item.positionId == result.positionId)
-        const list = [...tradeList]
-        if (indexResult !== -1) {
-          list[indexResult] = result
+        try {
+          const result = JSON.parse(dataString)
+          const indexResult = tradeList.findIndex(item => item.positionId == result.positionId)
+          const list = [...tradeList]
+          if (indexResult !== -1) {
+            list[indexResult] = result
+          }
+          else {
+            list.push(result)
+          }
+          setTradeList(list)
         }
-        else {
-          list.push(result)
+        catch(err) {
+          console.log(err)
         }
-        setTradeList(list)
       }
       else {
         setTradeList([])
