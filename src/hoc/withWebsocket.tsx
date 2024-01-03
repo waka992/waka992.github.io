@@ -6,7 +6,7 @@ import useEncrypt from "@/hooks/useEncrypt";
 const WithWebsocket = (WrappedComponent) => {
   const { encrypt } = useEncrypt();
   const userid = WebApp.initDataUnsafe?.user?.id || 123123;
-  const encryptUserid = encrypt(userid)
+  const encryptUserid = encodeURIComponent(encrypt(userid))
 
   const WrappedComponentWithModel = (props) => {
     const socketUrl = `ws://127.0.0.1:8088/ws/${encryptUserid}`;
