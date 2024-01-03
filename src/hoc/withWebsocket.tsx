@@ -42,7 +42,7 @@ const WithWebsocket = (WrappedComponent) => {
     }[readyState];
     console.log(connectionStatus);
 
-    useEffect(() => {
+    const getListenKey = () => {
       const userid = WebApp.initDataUnsafe?.user?.id || 123123;
       const encryptUserid = encrypt(userid);
       const params = {
@@ -53,6 +53,10 @@ const WithWebsocket = (WrappedComponent) => {
         console.log("res", res);
         setSocketUrl(res);
       });
+    };
+
+    useEffect(() => {
+      getListenKey();
     }, []);
     // if (connectionStatus == "Connecting") {
     //   // skeleton

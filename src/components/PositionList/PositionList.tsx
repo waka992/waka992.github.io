@@ -15,23 +15,23 @@ const PositionList = (props: Props) => {
   const formatusd = useFormatUSD();
   const globalCtx = useContext(GlobalContext)
   const [tradeList, setTradeList] = useState([
-    {
-      positionId: 0,
-      userId: 0,
-      symbol: "BTCUSDT",
-      direction: "LONG",
-      leverage: 50,
-      quantity: 0.02,
-      margin: 29.7,
-      marginRate: 0,
-      fee:0,
-      entryPrice: 42987.6,
-      markPrice: 42987.7,
-      forcePrice: 42987.8,
-      positionStatus: 0,
-      unrealizedProfit: 0,
-      roi: 0,
-    },
+    // {
+      // positionId: 0,
+      // userId: 0,
+      // symbol: "BTCUSDT",
+      // direction: "LONG",
+      // leverage: 50,
+      // quantity: 0.02,
+      // margin: 29.7,
+      // marginRate: 0,
+      // fee:0,
+      // entryPrice: 42987.6,
+      // markPrice: 42987.7,
+      // forcePrice: 42987.8,
+      // positionStatus: 0,
+      // unrealizedProfit: 0,
+      // roi: 0,
+    // },
   ]);
   const [selectedItem, setSelectItem] = useState(0)
   const [selectedItemObject, setSelectItemObject] = useState({})
@@ -61,7 +61,12 @@ const PositionList = (props: Props) => {
     console.log("websocket lastMessage:", globalCtx.lastMessage)
     if (globalCtx.lastMessage !== null) {
       const positionList = globalCtx.lastMessage.position
-      setTradeList(positionList)
+      if (positionList) {
+        setTradeList(positionList)
+      }
+      else {
+        setTradeList([])
+      }
     }
   }, [globalCtx.lastMessage])
 
