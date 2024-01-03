@@ -65,7 +65,12 @@ const OrderingList = (props: Props) => {
     console.log(params);
     post("/exchange/queryAllOrder", params).then((res: any) => {
       console.log(res);
-      setTradeList(res);
+      if (res) {
+        setTradeList(res);
+      }
+      else {
+        setTradeList([]);
+      }
     });
   };
 
