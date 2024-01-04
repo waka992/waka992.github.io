@@ -125,7 +125,7 @@ const PositionList = (props: Props) => {
       {tradeList.map((item, index) => (
         <div className="position-item" key={index}>
           <div className="token-info position-mb">
-            <div className={`position-direction ${item.direction?.indexOf("LONG") !== -1 ? "up" : "down"}`}></div>
+            <div className={`position-direction ${item.postionSide?.indexOf("LONG") !== -1 ? "up" : "down"}`}></div>
             <div className="token-name">{item.symbol}</div>
             <div className="leverage">{item.leverage}X</div>
           </div>
