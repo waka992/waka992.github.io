@@ -86,7 +86,7 @@ const Wallet = (props: Props) => {
       validUntil: Date.now() + 1000000,
       messages: [
         {
-          address: "0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm", // destination address
+          address: "0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm", // fyk destination address
           // address:
           //   "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F", // destination address
           amount: value * 10 ** 9, //Toncoin in nanotons

@@ -11,19 +11,20 @@ import useEncrypt from "@/hooks/useEncrypt";
 import useFormatUSD from "@/hooks/useFormatUSD";
 
 type Props = {
-  item: {
-    symbol: string,
-    leverage: number,
-    pnl: number,
-    roi: number,
-    quantity: number,
-    margin: number,
-    marginRatio: number,
-    entryPrice: number,
-    markPrice: number,
-    liqPrice: number,
-    direction: string
-  };
+  // item: {
+  //   symbol: string,
+  //   leverage: number,
+  //   pnl: number,
+  //   roi: number,
+  //   quantity: number,
+  //   margin: number,
+  //   marginRatio: number,
+  //   entryPrice: number,
+  //   markPrice: number,
+  //   liqPrice: number,
+  //   direction: string
+  // };
+  item: any;
   onClose: () => void;
 };
 
