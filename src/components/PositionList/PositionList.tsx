@@ -170,7 +170,7 @@ const PositionList = (props: Props) => {
                     item.marginRate >= 0 ? "up" : "down"
                   }`}
                 >
-                  {(item.marginRate)*100} %
+                  {((item.marginRate)*100).toFixed(2)} %
                 </span>
               </div>
             </div>

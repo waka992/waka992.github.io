@@ -1,0 +1,59 @@
+.receive-confirm {
+    padding: 0 20px;
+
+    .txn-confirm-mb {
+        margin-bottom: 20px;
+    }
+
+    .transaction-confirm-header {
+        position: relative;
+        font-size: 16px;
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+
+        .close-button {
+            position: absolute;
+            right: 10px;
+            top: 0;
+            width: 20px;
+        }
+    }
+
+    .amount-input-inner {
+        width: 100%;
+        text-align: center;
+
+        input {
+            text-align: center;
+            padding: 10px 0;
+            padding-left: 30px;
+        }
+    }
+
+  
+    .receive-balance,.receive-address {
+        color: var(--grey);
+        margin-top: 8px;
+    }
+    .address-info {
+        color: var(--black);
+    }
+
+    .notice {
+        font-size: 11px;
+
+        &.red {
+            color: var(--red);
+        }
+    }
+
+    .notice-icon {
+        vertical-align: middle;
+        margin-right: 2px;
+    }
+
+    .confirm-button {
+        width: 100%;
+    }
+}

@@ -13,6 +13,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import useTransaction from "@/hooks/useTransaction";
 import { Drawer } from "@mui/material";
 import TransactionConfirm from "../Drawer/TransactionConfirm/TransactionConfirm";
+import ReceiveConfirm from "../Drawer/ReceiveConfirm/ReceiveConfirm";
 import WebApp from "@twa-dev/sdk";
 import useEncrypt from "@/hooks/useEncrypt";
 import useAxios from "@/hooks/useAxios";
@@ -28,13 +29,18 @@ const Wallet = (props: Props) => {
   const { post } = useAxios();
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
-  const drawerOpen = useCallback(() => {
+  const drawerOpen = () => {
     setOpen(true);
-  }, []);
+  };
+
+  const [receiveOpen, setReceiveOpen] = useState(false);
+  const receiveDrawerOpen = () => {
+    setReceiveOpen(true);
+  };
 
   const [balanceVisiable, setBalanceVisiable] = useState(false);
   const [tonConnectUI, setOptions] = useTonConnectUI();
-  const receiveTxn = useTransaction()
+  const receiveTxn = useTransaction();
   const switchBalanceVisiable = useCallback(() => {
     setBalanceVisiable(!balanceVisiable);
   }, [balanceVisiable]);
@@ -48,7 +54,7 @@ const Wallet = (props: Props) => {
     const userId = WebApp.initDataUnsafe?.user?.id || "123123";
     const address = Cookies.get("address");
     if (!address) {
-      return
+      return;
     }
     const signature = encrypt(`${userId}|${address}`);
     const params = {
@@ -61,7 +67,7 @@ const Wallet = (props: Props) => {
       balance: number;
       availableBalance: number;
     }
-  
+
     post("/user/queryBalance", params).then((res: Ires) => {
       console.log(res);
       setBalanceHandler(res.balance, res.availableBalance);
@@ -94,56 +100,58 @@ const Wallet = (props: Props) => {
     const result = await tonConnectUI.sendTransaction(txparams);
     console.log(result.boc);
     if (result) {
-      informBalance(value)
+      informBalance(value);
     }
   };
 
   const informBalance = (value) => {
     const userId = WebApp.initDataUnsafe?.user?.id || "123123";
-      const address = Cookies.get("address");
-      if (!address) {
-        return
-      }
-      const signature = encrypt(`${userId}|${address}`);
-      const toAddress = (import.meta.env.TON_TEST_WALLET_ADDRESS || "").toString(); // 🔴 Change to your own, by creating .env file!
-      const params = {
-        userid: userId,
-        address,
-        signature,
-        type: 0, // 1withdraw, 0deposite
-        amount: value,
-        toAddress,
-      };
-      post("/exchange/depositOrWithdraw", params);
+    const address = Cookies.get("address");
+    if (!address) {
+      return;
+    }
+    const signature = encrypt(`${userId}|${address}`);
+    const toAddress = (
+      import.meta.env.TON_TEST_WALLET_ADDRESS || ""
+    ).toString(); // 🔴 Change to your own, by creating .env file!
+    const params = {
+      userid: userId,
+      address,
+      signature,
+      type: 0, // 1withdraw, 0deposite
+      amount: value,
+      toAddress,
+    };
+    post("/exchange/depositOrWithdraw", params);
   };
 
   // receive
-  const receiveConfirm = () => {
+  const receiveConfirm = (value) => {
     const address = Cookies.get("address");
     if (!address) {
-      return
+      return;
     }
     // receiveTxn(address, receiveInformBalance)
-    receiveTxn(address, receiveInformBalance)
-  }
+    receiveTxn(address, value, receiveInformBalance);
+  };
 
   const receiveInformBalance = (value) => {
     const userId = WebApp.initDataUnsafe?.user?.id || "123123";
-      const toAddress = Cookies.get("address");
-      if (!toAddress) {
-        return
-      }
-      const address = (import.meta.env.TON_TEST_WALLET_ADDRESS || "").toString(); // 🔴 Change to your own, by creating .env file!
-      const signature = encrypt(`${userId}|${address}`);
-      const params = {
-        userid: userId,
-        address,
-        signature,
-        type: 1, // 1withdraw, 0deposite
-        amount: value,
-        toAddress,
-      };
-      post("/exchange/depositOrWithdraw", params);
+    const toAddress = Cookies.get("address");
+    if (!toAddress) {
+      return;
+    }
+    const address = (import.meta.env.TON_TEST_WALLET_ADDRESS || "").toString(); // 🔴 Change to your own, by creating .env file!
+    const signature = encrypt(`${userId}|${address}`);
+    const params = {
+      userid: userId,
+      address,
+      signature,
+      type: 1, // 1withdraw, 0deposite
+      amount: value,
+      toAddress,
+    };
+    post("/exchange/depositOrWithdraw", params);
   };
 
   useEffect(() => {
@@ -197,7 +205,7 @@ const Wallet = (props: Props) => {
             <FiSend className="button-icon" />
             Send
           </Button>
-          <Button size="small" onClick={receiveConfirm}>
+          <Button size="small" onClick={receiveDrawerOpen}>
             <RiWalletLine className="button-icon" />
             Receive
           </Button>
@@ -209,6 +217,20 @@ const Wallet = (props: Props) => {
           <TransactionConfirm
             onConfirm={sendTxn}
             onClose={() => setOpen(false)}
+          />
+        </div>
+      </Drawer>
+
+      <Drawer
+        anchor="bottom"
+        open={receiveOpen}
+        onClose={() => setReceiveOpen(false)}
+      >
+        <div style={{ height: "50vh" }}>
+          <ReceiveConfirm
+            balance={surplus}
+            onConfirm={receiveConfirm}
+            onClose={() => setReceiveOpen(false)}
           />
         </div>
       </Drawer>

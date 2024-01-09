@@ -15,7 +15,9 @@ const HomePage = () => {
   };
   return (
     <div className="home-page flex-column">
-      <div className="intro"></div>
+      <div className="intro">
+        <img src="src/assets/index1.png" alt="Best Bit" />
+      </div>
       <div className="quotes flex-column">
         {/* <ToggleButtonGroup
           value={typeValue}

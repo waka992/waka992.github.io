@@ -13,7 +13,7 @@ import { getHttpEndpoint, getHttpV4Endpoint } from "@orbs-network/ton-access";
 import toast from 'react-hot-toast';
 
 export default function useTransaction() {
-  return async function (address, callback) {
+  return async function (address, value, callback) {
     try {
 
       const endpoint = await getHttpV4Endpoint({ network: "testnet" });
@@ -45,7 +45,7 @@ export default function useTransaction() {
           internal({
             to: address, // target
             // to: "0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm",
-            value: toNano("0.01"),
+            value: toNano(value),
             bounce: true,
             // init: target_wallet.init,
           }),
@@ -59,7 +59,7 @@ export default function useTransaction() {
       // console.log("Deploying contract: " + target_wallet.address.toString());
       console.log("=====================================");
       console.log(wallet.init.code.toBoc().toString("hex"));
-      callback && callback(0.01)
+      callback && callback(value)
       toast.success("Transaction success, please check your account.")
     }
     catch(err) {
