@@ -132,7 +132,7 @@ const PositionList = (props: Props) => {
 
           <div className="profit flex-row position-mb">
             <div className="profit-loss flex-column">
-              <span>PNL</span>
+              <span>PNL(USDT)</span>
               <span
                 className={`pnl-value --ischange ${item.unrealizedProfit >= 0 ? "up" : "down"}`}
               >
@@ -157,7 +157,7 @@ const PositionList = (props: Props) => {
               </div>
 
               <div className="margin flex-column">
-                <span>Margin (USDT)</span>
+                <span>Margin(USDT)</span>
                 <span className="margin-value value-font-size">
                   {formatusd(item.margin)}
                 </span>
@@ -170,7 +170,7 @@ const PositionList = (props: Props) => {
                     item.marginRate >= 0 ? "up" : "down"
                   }`}
                 >
-                  {item.marginRate}
+                  {(item.marginRate)*100} %
                 </span>
               </div>
             </div>

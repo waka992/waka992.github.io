@@ -65,7 +65,8 @@ function App(props) {
           getWebSocket,
         }}
       >
-        <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/waka992/waka992.github.io/master/docs/tonconnect-manifest.json">
+        <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/waka992/waka992.github.io/master/tonconnect-manifest.json">
+
           <HashRouter>
             <TopBar />
             <Routes>

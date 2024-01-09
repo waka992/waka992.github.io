@@ -33,6 +33,10 @@
 
     .notice {
         font-size: 11px;
+
+        &.red {
+            color: var(--red);
+        }
     }
 
     .notice-icon {

@@ -58,7 +58,11 @@ const TransactionConfirm = (props: Props) => {
 
       <div className="notice txn-confirm-mb">
         <RiErrorWarningFill className="notice-icon" />
-        Please confirm the amount. Please open the wallet mobile app before clicking the confirmation button. TON will send you a request for confirmation.
+        Please open the wallet mobile app before clicking the confirmation button. TON will send you a request for confirmation.
+      </div>
+      <div className="notice red txn-confirm-mb">
+        <RiErrorWarningFill className="notice-icon" />
+        IMPORTANT: Please do not close the waiting pop-up window before confirming the transaction in the app, otherwise the system will not be able to obtain the transfer information.
       </div>
       <div className="confirm-button-box">
         <Button

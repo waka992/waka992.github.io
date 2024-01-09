@@ -8,9 +8,7 @@ import { FiEye } from "react-icons/fi";
 import { FiEyeOff } from "react-icons/fi";
 import { FiSend } from "react-icons/fi";
 import { RiWalletLine } from "react-icons/ri";
-import {
-  useTonConnectUI,
-} from "@tonconnect/ui-react";
+import { useTonConnectUI } from "@tonconnect/ui-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import useTransaction from "@/hooks/useTransaction";
 import { Drawer } from "@mui/material";
@@ -26,19 +24,17 @@ interface Props {
 
 const Wallet = (props: Props) => {
   const shortStr = useShortStr(4, 4);
-  const {encrypt} = useEncrypt()
-  const {post} = useAxios()
+  const { encrypt } = useEncrypt();
+  const { post } = useAxios();
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
   const drawerOpen = useCallback(() => {
     setOpen(true);
   }, []);
 
-
-
   const [balanceVisiable, setBalanceVisiable] = useState(false);
   const [tonConnectUI, setOptions] = useTonConnectUI();
-  // const txn = useTransaction()
+  const receiveTxn = useTransaction()
   const switchBalanceVisiable = useCallback(() => {
     setBalanceVisiable(!balanceVisiable);
   }, [balanceVisiable]);
@@ -50,57 +46,109 @@ const Wallet = (props: Props) => {
 
   const getBalance = () => {
     const userId = WebApp.initDataUnsafe?.user?.id || "123123";
-    const address = Cookies.get("address")
-    const signature = encrypt(`${userId}|${address}`)
+    const address = Cookies.get("address");
+    if (!address) {
+      return
+    }
+    const signature = encrypt(`${userId}|${address}`);
     const params = {
       userId,
       address,
-      signature
+      signature,
+    };
+    interface Ires {
+      userId: number;
+      balance: number;
+      availableBalance: number;
     }
-    interface Ires  {
-      userId: number,
-      balance: number, 
-      availableBalance: number
-    }
-    post("/user/queryBalance", params).then((res:Ires) => {
-      console.log(res)
-      setBalanceHandler(res.balance, res.availableBalance)
+  
+    post("/user/queryBalance", params).then((res: Ires) => {
+      console.log(res);
+      setBalanceHandler(res.balance, res.availableBalance);
     });
-  }
+  };
 
   const setBalanceHandler = (balance, available) => {
     if (!isNaN(Number(balance)) && !isNaN(Number(available))) {
-      const freezeAmount = balance - available
-      setBalance(balance)
-      setSurplus(available)
-      setFreeze(freezeAmount)
+      const freezeAmount = balance - available;
+      setBalance(balance);
+      setSurplus(available);
+      setFreeze(freezeAmount);
     }
-  }
+  };
 
-  const sendTxn = (value) => {
+  // send
+  const sendTxn = async (value) => {
     if (!value) {
       return;
     }
-    // txn()
-    const tx: any = {
+    const txparams: any = {
       validUntil: Date.now() + 1000000,
       messages: [
         {
-          address: "0QBTBIv702p5mocP2a7fb_ubIMTRxOcPDNojulE2LILctxkm", // fyk destination address
-          // address:
-          //   "0:412410771DA82CBA306A55FA9E0D43C9D245E38133CB58F1457DFB8D5CD8892F", // destination address
+          address: "0QCy6Q-bU_W6sT0knC4JX48th3CNdxIsyQ02auoaGgwPhg8e", // test destination address
           amount: value * 10 ** 9, //Toncoin in nanotons
         },
       ],
     };
-    tonConnectUI.sendTransaction(tx);
+    const result = await tonConnectUI.sendTransaction(txparams);
+    console.log(result.boc);
+    if (result) {
+      informBalance(value)
+    }
   };
 
+  const informBalance = (value) => {
+    const userId = WebApp.initDataUnsafe?.user?.id || "123123";
+      const address = Cookies.get("address");
+      if (!address) {
+        return
+      }
+      const signature = encrypt(`${userId}|${address}`);
+      const toAddress = (import.meta.env.TON_TEST_WALLET_ADDRESS || "").toString(); // 🔴 Change to your own, by creating .env file!
+      const params = {
+        userid: userId,
+        address,
+        signature,
+        type: 0, // 1withdraw, 0deposite
+        amount: value,
+        toAddress,
+      };
+      post("/exchange/depositOrWithdraw", params);
+  };
+
+  // receive
+  const receiveConfirm = () => {
+    const address = Cookies.get("address");
+    if (!address) {
+      return
+    }
+    // receiveTxn(address, receiveInformBalance)
+    receiveTxn(address, receiveInformBalance)
+  }
+
+  const receiveInformBalance = (value) => {
+    const userId = WebApp.initDataUnsafe?.user?.id || "123123";
+      const toAddress = Cookies.get("address");
+      if (!toAddress) {
+        return
+      }
+      const address = (import.meta.env.TON_TEST_WALLET_ADDRESS || "").toString(); // 🔴 Change to your own, by creating .env file!
+      const signature = encrypt(`${userId}|${address}`);
+      const params = {
+        userid: userId,
+        address,
+        signature,
+        type: 1, // 1withdraw, 0deposite
+        amount: value,
+        toAddress,
+      };
+      post("/exchange/depositOrWithdraw", params);
+  };
 
   useEffect(() => {
-    getBalance()
+    getBalance();
   }, []);
-
 
   return (
     <div className="wallet">
@@ -149,7 +197,7 @@ const Wallet = (props: Props) => {
             <FiSend className="button-icon" />
             Send
           </Button>
-          <Button size="small">
+          <Button size="small" onClick={receiveConfirm}>
             <RiWalletLine className="button-icon" />
             Receive
           </Button>
