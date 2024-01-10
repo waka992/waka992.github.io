@@ -44,7 +44,11 @@ const ConnectButton = () => {
         if (token) {
           sessionStorage.setItem("token", token);
         }
+      }).catch(err => {
+        console.log(err)
       });
+    }).catch(err => {
+      console.log(err)
     });
     // get user data
   };

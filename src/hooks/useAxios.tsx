@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import useEncrypt from "./useEncrypt";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import qs from "qs";
 
 const useAxios = () => {
@@ -57,14 +57,15 @@ const useAxios = () => {
           // Promise.reject();
         }
       } else {
-        Promise.reject();
+        // Promise.reject();
+        return {};
       }
     },
     (error) => {
       console.log(error);
       setTimeout(() => {
-        sessionStorage.clear()
-    }, 500)
+        sessionStorage.clear();
+      }, 500);
       return Promise.reject();
     }
   );
@@ -73,24 +74,28 @@ const useAxios = () => {
   const axiosGet = service.get;
 
   const post = (name, query, limit = true, encode = false) => {
-    if (sessionStorage.getItem(name) === "true" && limit) {
-      // avoiding limit false
-      setTimeout(() => {
-        console.log("session clear!");
-        sessionStorage.clear();
-      }, 3000);
-      const donothingPromise = new Promise((res, rej) => {
-        rej();
-      });
-      return donothingPromise;
+    try {
+      if (sessionStorage.getItem(name) === "true" && limit) {
+        // avoiding limit false
+        setTimeout(() => {
+          console.log("session clear!");
+          sessionStorage.clear();
+        }, 3000);
+        const donothingPromise = new Promise((res, rej) => {
+          rej();
+        });
+        return donothingPromise;
+      }
+      sessionStorage.setItem(name, "true");
+      // encrypt
+      if (encode === true) {
+        console.log(query);
+        query = encrypt(JSON.stringify(query));
+      }
+      return axiosPost(name, query);
+    } catch (err) {
+      console.log(err);
     }
-    sessionStorage.setItem(name, "true");
-    // encrypt
-    if (encode === true) {
-      console.log(query);
-      query = encrypt(JSON.stringify(query));
-    }
-    return axiosPost(name, query);
   };
 
   const get = (path, query) => {

@@ -16,9 +16,12 @@ const HomePage = () => {
   };
   const { post } = useAxios();
   const fetchTradeData = () => {
+    // try {}
     post("/coinmarket/price", {
     }).then((res) => {
       console.log(res);
+    }).catch(err=> {
+      console.log("coinmarketerror", err)
     });
   };
 

@@ -52,6 +52,8 @@ const WithWebsocket = (WrappedComponent) => {
       post("/listenkey", params).then((res: string) => {
         console.log("res", res);
         setSocketUrl(res);
+      }).catch(err => {
+        console.log(err)
       });
     };
 
