@@ -16,7 +16,7 @@ const ReceiveConfirm = (props: Props) => {
   const [amount, setAmount] = useState(0);
   const address = Cookies.get("address")
   const amountChange = (e) => {
-    const value = Number(e.target.value);
+    const value = e.target.value;
     if (value < 0) {
       return;
     }
