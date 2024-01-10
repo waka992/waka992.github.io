@@ -1,6 +1,6 @@
 // modules
 import { useCallback, useEffect, useState } from "react";
-// import eruda from "eruda";
+import eruda from "eruda";
 import WebApp from "@twa-dev/sdk";
 import { Routes, Route, HashRouter, Navigate } from "react-router-dom";
 import GlobalContext from "@/store/global-context";
@@ -49,7 +49,7 @@ function App(props) {
     console.log(WebApp.isExpanded);
   }, []);
 
-  // eruda.init();
+  eruda.init();
 
   return (
     <div className="App flex-column">
