@@ -10,8 +10,8 @@ const useAxios = () => {
   axios.defaults.headers.post["Content-Type"] =
     "application/json; charset=utf-8";
   const service = axios.create({
-    baseURL: "http://localhost:8088",
-    // baseURL: "http://localhost:8088/api/",
+    // baseURL: "http://localhost:8088",
+    baseURL: "https://www.coin-dex.info",
     timeout: 10000,
   });
 
