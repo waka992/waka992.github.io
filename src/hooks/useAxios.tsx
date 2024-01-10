@@ -11,7 +11,7 @@ const useAxios = () => {
     "application/json; charset=utf-8";
   const service = axios.create({
     // baseURL: "http://localhost:8088",
-    baseURL: "https://www.coin-dex.info",
+    baseURL: "https://www.coin-dex.info:8088",
     timeout: 10000,
   });
 
