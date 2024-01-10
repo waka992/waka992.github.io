@@ -11,6 +11,7 @@ const useAxios = () => {
     "application/json; charset=utf-8";
   const service = axios.create({
     baseURL: "http://localhost:8088",
+    // baseURL: "http://localhost:8088/api/",
     timeout: 10000,
   });
 
