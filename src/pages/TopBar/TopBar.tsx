@@ -23,7 +23,6 @@ const TopBar = () => {
   }, [])
 
   useEffect(() => {
-    console.log(location.pathname)
     const {pathname} = location
     if (pathname.indexOf("history") !== -1) {
       setShowBar(false)

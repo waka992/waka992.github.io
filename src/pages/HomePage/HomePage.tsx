@@ -32,7 +32,7 @@ const HomePage = () => {
   return (
     <div className="home-page flex-column">
       <div className="intro">
-        <img src="src/assets/index1.png" alt="Best Bit" />
+        <img src="/src/assets/img/index1.png" alt="Best Bit" />
       </div>
       <div className="quotes flex-column">
         {/* <ToggleButtonGroup
