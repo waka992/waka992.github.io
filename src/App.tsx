@@ -48,6 +48,7 @@ function App(props) {
     WebApp.expand();
     console.log(WebApp.isExpanded);
   }, []);
+  console.log("webapp initdataunsafe",WebApp.initDataUnsafe, WebApp.initDataUnsafe?.user?.id)
 
   eruda.init();
 

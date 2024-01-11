@@ -9,10 +9,10 @@ type Props = {
 };
 
 const TransactionConfirm = (props: Props) => {
-  
-
   const [amount, setAmount] = useState(0);
-
+  const blurHandler = () => {
+    window.scrollTo(0, 0)
+  }
   const amountChange = (e) => {
     const value = e.target.value;
     if (value < 0) {
@@ -43,6 +43,7 @@ const TransactionConfirm = (props: Props) => {
           type="number"
           value={amount}
           onChange={amountChange}
+          onBlur={blurHandler}
           sx={{
             paddingTop: "10px"
           }}

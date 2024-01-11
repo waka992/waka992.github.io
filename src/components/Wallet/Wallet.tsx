@@ -18,7 +18,7 @@ import WebApp from "@twa-dev/sdk";
 import useEncrypt from "@/hooks/useEncrypt";
 import useAxios from "@/hooks/useAxios";
 import Cookies from "js-cookie";
-
+import { toast } from "react-hot-toast";
 interface Props {
   address: string;
 }
@@ -85,6 +85,11 @@ const Wallet = (props: Props) => {
 
   // send
   const sendTxn = async (value) => {
+    const userid = WebApp.initDataUnsafe?.user?.id;
+    if (!userid) {
+      toast.error("Can not get userId, please reload this page");
+      return;
+    }
     if (!value) {
       return;
     }
@@ -122,11 +127,20 @@ const Wallet = (props: Props) => {
       amount: value,
       toAddress,
     };
-    post("/exchange/depositOrWithdraw", params);
+    post("/exchange/depositOrWithdraw", params).then(res => {
+      if (res) {
+        getBalance()
+      }
+    });
   };
 
   // receive
   const receiveConfirm = (value) => {
+    const userid = WebApp.initDataUnsafe?.user?.id;
+    if (!userid) {
+      toast.error("Can not get userId, please reload this page");
+      return;
+    }
     const address = Cookies.get("address");
     if (!address) {
       return;
@@ -151,7 +165,11 @@ const Wallet = (props: Props) => {
       amount: value,
       toAddress,
     };
-    post("/exchange/depositOrWithdraw", params);
+    post("/exchange/depositOrWithdraw", params).then((res) => {
+      if (res) {
+        getBalance()
+      }
+    });
   };
 
   useEffect(() => {
@@ -185,13 +203,13 @@ const Wallet = (props: Props) => {
         <div className="balance-surplus">
           <span className="surplus-desc">SURPLUS:</span>
           <span className="surplus-value">
-            {balanceVisiable ? `$${surplus}` : `****`}
+            {balanceVisiable ? `$${surplus.toFixed(2)}` : `****`}
           </span>
         </div>
         <div className="freeze-balance-box">
           <span className="freeze-desc">FREEZE:</span>
           <span className="freeze-value">
-            {balanceVisiable ? `$${freeze}` : `****`}
+            {balanceVisiable ? `$${freeze.toFixed(2)}` : `****`}
           </span>
         </div>
       </div>

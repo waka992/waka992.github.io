@@ -192,7 +192,8 @@ const OrderPage = () => {
     console.log(params);
     post("/exchange/OpenPerpetualOrder", params).then((res) => {
       console.log(res);
-      toast.success("Order placed!")
+      toast.success("Order placed!");
+      setConfirmDrawerOpen(false);
       getBalance();
     });
 
@@ -290,8 +291,8 @@ const OrderPage = () => {
           <div className="value-input flex-row">
             <div className="price-input-box flex1">
               <TextField
-                type="number"
                 className="price-input"
+                type="number"
                 sx={{ width: "95%" }}
                 variant="filled"
                 value={price}
@@ -306,6 +307,7 @@ const OrderPage = () => {
                 className="amount-input"
                 type="number"
                 sx={{ width: "95%" }}
+                variant="filled"
                 value={amount}
                 onBlur={formatAmountChange}
                 onChange={amountChange}
@@ -316,7 +318,6 @@ const OrderPage = () => {
                     </InputAdornment>
                   ),
                 }}
-                variant="filled"
               />
               <div className="price-input-placeholder">AMOUNT</div>
             </div>

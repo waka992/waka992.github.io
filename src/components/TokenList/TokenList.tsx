@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./TokenList.scss";
 import SortArrow from "../SortArrow/SortArrow";
 import useAxios from "@/hooks/useAxios";
+import Skeleton from "@mui/material/Skeleton";
 
 const TokenList = () => {
   const [filter, setFilter] = useState({
@@ -26,8 +27,8 @@ const TokenList = () => {
 
 
   
-  const [tradeList, setTradeList] = useState([
-    { symbol: "BTC", quote: {usd: {volume_24h: 0, price: 0,percent_change_24h:0}}, price: 19.293, change: -90.43 },
+  const [tradeList, setTradeList] = useState<any>([
+    // { symbol: "BTC", quote: {usd: {volume_24h: 0, price: 0,percent_change_24h:0}}, price: 19.293, change: -90.43 },
   ]);
 
   const filterClick = (target) => {
@@ -51,7 +52,7 @@ const TokenList = () => {
           className="token-header-item clickable"
           onClick={() => filterClick("volume")}
         >
-          <span>Pair / 24h volume</span>
+          <span>Pair</span>
           <span className="token-header-sort">
             <SortArrow
               direct={filter.target === "volume" ? filter.direction : ""}
@@ -77,12 +78,13 @@ const TokenList = () => {
       </div>
 
       <div className="token-box flex1">
-        {tradeList.map((item, key) => {
+       { tradeList ?
+        tradeList.map((item, key) => {
           return (
             <div className="token-item" key={key}>
               <div className="token-info">
                 <div className="token-pair">{item.symbol}/USDT</div>
-                <div className="token-volume">{item.quote.usd.volume_24h.toFixed(0)}</div>
+                {/* <div className="token-volume">{item.quote.usd.volume_24h.toFixed(0)}</div> */}
               </div>
               <div className={`${item.quote.usd.percent_change_24h < 0 ? "down" : "up"} token-price`}>{item.quote.usd.price.toFixed(2)}</div>
               <div className={`${item.quote.usd.percent_change_24h < 0 ? "down" : "up"} token-change`}>
@@ -90,7 +92,54 @@ const TokenList = () => {
               </div>
             </div>
           );
-        })}
+        })
+        :
+        <div
+          style={{
+            marginTop: "86px",
+            paddingLeft: "20px",
+          }}
+        >
+          <Skeleton
+            variant="rectangular"
+            width={"90vw"}
+            height={"20vh"}
+            sx={{
+              borderRadius: "10px",
+            }}
+            animation="wave"
+          />
+
+          <Skeleton
+            variant="text"
+            width={"90vw"}
+            height={"28px"}
+            sx={{ marginTop: "100px", borderRadius: "10px" }}
+          />
+
+          <Skeleton
+            variant="rectangular"
+            width={210}
+            height={"62px"}
+            sx={{ marginTop: "14px", borderRadius: "10px" }}
+            animation="wave"
+          />
+          <Skeleton
+            variant="rectangular"
+            width={210}
+            height={"62px"}
+            sx={{ marginTop: "14px", borderRadius: "10px" }}
+            animation="wave"
+          />
+          <Skeleton
+            variant="rectangular"
+            width={210}
+            height={"62px"}
+            sx={{ marginTop: "14px", borderRadius: "10px" }}
+            animation="wave"
+          />
+        </div>
+        }
       </div>
     </div>
   );
