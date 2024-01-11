@@ -15,7 +15,6 @@ const TokenList = () => {
     // try {}
     get("/coinmarket/price", {
     }).then((res) => {
-      console.log(res);
       if (res && res.data) {
         const list = res.data.slice(0,20)
         setTradeList(list)

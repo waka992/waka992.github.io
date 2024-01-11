@@ -21,7 +21,7 @@ const Chart = () => {
   return (
     <div className="chart">
       <TokenSwitch tokenSymbol={tokenSymbol} changeTokenSymbol={changeTokenSymbol}/>
-      <ChartHeader />
+      <ChartHeader tokenSymbol={tokenSymbol}/>
       <div className="chart-container">
         <TradingViewWidget tokenSymbol={tokenSymbol}/>
       </div>

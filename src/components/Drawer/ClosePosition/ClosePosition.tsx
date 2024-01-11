@@ -54,7 +54,7 @@ const ClosePosition = (props: Props) => {
 
   const confirm = () => {
     props.onClose();
-    const positionId = "";
+    const positionId = props.item.positionId;
     const userId = WebApp.initDataUnsafe?.user?.id || 123123;
     const symbol = props.item.symbol;
     const orderType = "STOP"; // STOP / STOP_MARKET
