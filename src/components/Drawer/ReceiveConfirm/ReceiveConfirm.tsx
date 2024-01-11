@@ -14,6 +14,9 @@ type Props = {
 const ReceiveConfirm = (props: Props) => {
   const shortStr = useShortStr(4, 4);
   const [amount, setAmount] = useState(0);
+  const blurHandler = () => {
+    window.scrollTo(0, 0)
+  }
   const address = Cookies.get("address")
   const amountChange = (e) => {
     const value = e.target.value;
@@ -45,6 +48,7 @@ const ReceiveConfirm = (props: Props) => {
           type="number"
           value={amount}
           onChange={amountChange}
+          onBlur={blurHandler}
           sx={{
             paddingTop: "10px"
           }}
