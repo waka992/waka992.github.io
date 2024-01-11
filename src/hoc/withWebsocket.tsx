@@ -15,8 +15,8 @@ const WithWebsocket = (WrappedComponent) => {
       return new Promise((resolve) => {
         if (socketUrl) {
           setTimeout(() => {
-            // resolve(`wss://www.coin-dex.info/ws/${socketUrl}`);
-            resolve(`wss://www.coin-dex.info/ws/mkOf2MxNgbEMzAQe9ov4VYMbdpGm0As2XgyIoe7btSGIJG1KwAXLy3taZrp6ODvM`);
+            resolve(`wss://www.coin-dex.info/ws/${socketUrl}`);
+            // resolve(`wss://www.coin-dex.info/ws/mkOf2MxNgbEMzAQe9ov4VYMbdpGm0As2XgyIoe7btSGIJG1KwAXLy3taZrp6ODvM`);
           }, 0);
         }
       });
