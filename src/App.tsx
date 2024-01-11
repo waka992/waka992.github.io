@@ -67,7 +67,6 @@ function App(props) {
         }}
       >
         <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/waka992/waka992.github.io/master/tonconnect-manifest.json">
-
           <HashRouter>
             <TopBar />
             <Routes>

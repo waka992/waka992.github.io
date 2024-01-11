@@ -5,7 +5,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import WebApp from "@twa-dev/sdk";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import useAxios from "@/hooks/useAxios";
 import useEncrypt from "@/hooks/useEncrypt";
 import useFormatUSD from "@/hooks/useFormatUSD";
@@ -29,17 +29,15 @@ type Props = {
 };
 
 const ClosePosition = (props: Props) => {
-  const {post} = useAxios()
-  const {encrypt} = useEncrypt()
-  const formatusd = useFormatUSD()
-
-  const symbol = props.item.symbol;
+  const { post } = useAxios();
+  const { encrypt } = useEncrypt();
+  const formatusd = useFormatUSD();
   // price
   const [price, setPrice] = useState(0);
   const priceChange = (e) => {
     let value: any = e.target.value;
-    value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, '');
-    if (/^\d*\.?\d*$/.test(value) && (value >= 0 || value === '')) {
+    value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, "");
+    if (/^\d*\.?\d*$/.test(value) && (value >= 0 || value === "")) {
       setPrice(value);
     }
   };
@@ -48,22 +46,25 @@ const ClosePosition = (props: Props) => {
   const [amount, setAmount] = useState(props.item.quantity);
   const amountChange = (e) => {
     let value: any = e.target.value;
-    value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, '');
-    if (/^\d*\.?\d*$/.test(value) && (value >= 0 || value === '')) {
+    value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, "");
+    if (/^\d*\.?\d*$/.test(value) && (value >= 0 || value === "")) {
       setAmount(value);
     }
   };
 
   const confirm = () => {
-    props.onClose()
+    props.onClose();
     const positionId = "";
     const userId = WebApp.initDataUnsafe?.user?.id || 123123;
     const symbol = props.item.symbol;
     const orderType = "STOP"; // STOP / STOP_MARKET
     const orderPrice = price;
     const leverage = props.item.leverage;
-    const direction = props.item.direction.toUpperCase().indexOf("LONG") !== -1 ? "SHORT" : "LONG"; // close position should be opposite
-    const reduceOnly = "false"
+    const direction =
+      props.item.direction.toUpperCase().indexOf("LONG") !== -1
+        ? "SHORT"
+        : "LONG"; // close position should be opposite
+    const reduceOnly = "false";
 
     const signature = encrypt(`${userId}`);
 
@@ -77,17 +78,17 @@ const ClosePosition = (props: Props) => {
       amount,
       leverage,
       direction,
-      reduceOnly
+      reduceOnly,
     };
-    console.log(params)
+    console.log(params);
     post("/exchange/OpenPerpetualOrder", params).then((res) => {
-    console.log(res);
-      toast.success("Order placed!")
+      console.log(res);
+      toast.success("Order placed!");
       // getBalance();
     });
-  }
+  };
 
-  return (
+  return props.item ? (
     <div className="close-position">
       <div className="operate-title">
         Close Position
@@ -99,11 +100,15 @@ const ClosePosition = (props: Props) => {
       <div className="confirm-info">
         <div className="contract flex-row close-position-mb">
           <span className="flex1 grey">Contract</span>
-          <span className="flex1 --tar">{symbol}/{props.item.leverage}</span>
+          <span className="flex1 --tar">
+            {props.item.symbol}/{props.item.leverage}
+          </span>
         </div>
         <div className="price flex-row close-position-mb">
           <span className="flex1 grey">Entry Price</span>
-          <span className="flex1 --tar">{formatusd(props.item.entryPrice)}</span>
+          <span className="flex1 --tar">
+            {formatusd(props.item.entryPrice)}
+          </span>
         </div>
         <div className="amount flex-row close-position-mb">
           <span className="flex1 grey">Mark Price</span>
@@ -141,7 +146,7 @@ const ClosePosition = (props: Props) => {
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  {symbol.slice(0, -4)}
+                  {props.item.symbol.slice(0, -4)}
                 </InputAdornment>
               ),
             }}
@@ -151,13 +156,21 @@ const ClosePosition = (props: Props) => {
       </div>
 
       <div className="position-info close-position-mb2">
-      <div className="contract flex-row close-position-mb">
+        <div className="contract flex-row close-position-mb">
           <span className="flex1 grey">Position Amount</span>
-          <span className="flex1 --tar">{props.item.quantity} {symbol.slice(0, -4)}</span>
+          <span className="flex1 --tar">
+            {props.item.quantity} {props.item.symbol.slice(0, -4)}
+          </span>
         </div>
         <div className="price flex-row close-position-mb">
           <span className="flex1 grey">Estimated PNL</span>
-          <span className={`flex1 --tar --ischange ${props.item.pnl > 0 ? "up" : "down"}`}>{props.item.pnl} USDT</span>
+          <span
+            className={`flex1 --tar --ischange ${
+              props.item.pnl > 0 ? "up" : "down"
+            }`}
+          >
+            {props.item.pnl} USDT
+          </span>
         </div>
       </div>
 
@@ -172,7 +185,7 @@ const ClosePosition = (props: Props) => {
         </Button>
       </div>
     </div>
-  );
+  ) : null;
 };
 
 export default ClosePosition;

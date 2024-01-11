@@ -117,7 +117,7 @@ const Wallet = (props: Props) => {
     }
     const signature = encrypt(`${userId}|${address}`);
     const toAddress = (
-      import.meta.env.TON_TEST_WALLET_ADDRESS || ""
+      import.meta.env.VITE_TON_TEST_WALLET_ADDRESS || ""
     ).toString(); // 🔴 Change to your own, by creating .env file!
     const params = {
       userid: userId,
@@ -155,7 +155,7 @@ const Wallet = (props: Props) => {
     if (!toAddress) {
       return;
     }
-    const address = (import.meta.env.TON_TEST_WALLET_ADDRESS || "").toString(); // 🔴 Change to your own, by creating .env file!
+    const address = (import.meta.env.VITE_TON_TEST_WALLET_ADDRESS || "").toString(); // 🔴 Change to your own, by creating .env file!
     const signature = encrypt(`${userId}|${address}`);
     const params = {
       userid: userId,
