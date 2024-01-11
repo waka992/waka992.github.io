@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ClosePosition.scss";
 import { Button } from "@mui/material";
 import { IoCloseSharp } from "react-icons/io5";
@@ -43,7 +43,7 @@ const ClosePosition = (props: Props) => {
   };
 
   // amount
-  const [amount, setAmount] = useState(props.item.quantity);
+  const [amount, setAmount] = useState(0);
   const amountChange = (e) => {
     let value: any = e.target.value;
     value = value.replace(/^0+(?=\d)(?<!\.\d*?$)/, "");
@@ -87,6 +87,12 @@ const ClosePosition = (props: Props) => {
       // getBalance();
     });
   };
+
+  useEffect(() => {
+    if(props.item) {
+      setAmount(props.item.quantity)
+    }
+  }, [])
 
   return props.item ? (
     <div className="close-position">
