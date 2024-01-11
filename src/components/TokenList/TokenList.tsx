@@ -78,7 +78,7 @@ const TokenList = () => {
       </div>
 
       <div className="token-box flex1">
-       { tradeList ?
+       { tradeList.length !== 0 ?
         tradeList.map((item, key) => {
           return (
             <div className="token-item" key={key}>
@@ -95,46 +95,26 @@ const TokenList = () => {
         })
         :
         <div
-          style={{
-            marginTop: "86px",
-            paddingLeft: "20px",
-          }}
+        style={{marginTop: "20px"}}
         >
           <Skeleton
             variant="rectangular"
-            width={"90vw"}
-            height={"20vh"}
-            sx={{
-              borderRadius: "10px",
-            }}
-            animation="wave"
-          />
-
-          <Skeleton
-            variant="text"
-            width={"90vw"}
-            height={"28px"}
-            sx={{ marginTop: "100px", borderRadius: "10px" }}
-          />
-
-          <Skeleton
-            variant="rectangular"
-            width={210}
-            height={"62px"}
+            width={310}
+            height={"20px"}
             sx={{ marginTop: "14px", borderRadius: "10px" }}
             animation="wave"
           />
           <Skeleton
             variant="rectangular"
             width={210}
-            height={"62px"}
+            height={"20px"}
             sx={{ marginTop: "14px", borderRadius: "10px" }}
             animation="wave"
           />
           <Skeleton
             variant="rectangular"
             width={210}
-            height={"62px"}
+            height={"20px"}
             sx={{ marginTop: "14px", borderRadius: "10px" }}
             animation="wave"
           />
