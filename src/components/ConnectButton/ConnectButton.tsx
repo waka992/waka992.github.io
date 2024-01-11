@@ -42,7 +42,9 @@ const ConnectButton = () => {
       // then login with payload
       post("/user/login", loginParams).then((token: string) => {
         if (token) {
-          sessionStorage.setItem("token", token);
+          localStorage.setItem("best-bit-token", token);
+          const event = new Event('tokenChange');
+          window.dispatchEvent(event);
         }
       }).catch(err => {
         console.log(err)

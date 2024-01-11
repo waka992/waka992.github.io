@@ -18,7 +18,7 @@ const useAxios = () => {
 
   service.interceptors.request.use(
     (config) => {
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("best-bit-token");
       if (token) {
         config.headers["token"] = token;
       }

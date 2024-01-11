@@ -10,6 +10,8 @@ const WithWebsocket = (WrappedComponent) => {
   const { post } = useAxios();
 
   const WrappedComponentWithModel = (props) => {
+    const token = localStorage.getItem("best-bit-token");
+
     const [socketUrl, setSocketUrl] = useState("");
     const getSocketUrl = useCallback(() => {
       return new Promise((resolve) => {
@@ -58,8 +60,21 @@ const WithWebsocket = (WrappedComponent) => {
     };
 
     useEffect(() => {
-      getListenKey();
-    }, []);
+      const handleStorageChange = () => {
+        const token = localStorage.getItem("best-bit-token")
+        if (token) {
+          console.log("token received")
+          getListenKey();
+        }
+      };
+  
+      window.addEventListener('tokenChange', handleStorageChange);
+  
+      return () => {
+        window.removeEventListener('tokenChange', handleStorageChange);
+      };
+    }, []); // 注意第二个参数是空数组，表示只在组件挂载和卸载时执行
+  
     // if (connectionStatus == "Connecting") {
     //   // skeleton
     //   return (
