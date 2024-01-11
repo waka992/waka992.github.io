@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./TokenList.scss";
 import SortArrow from "../SortArrow/SortArrow";
+import useAxios from "@/hooks/useAxios";
 
 const TokenList = () => {
   const [filter, setFilter] = useState({
@@ -8,21 +9,25 @@ const TokenList = () => {
     direction: "volume",
   });
 
-  const [tradeList] = useState([
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: -90.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
-    { pair: "USDT/BTC", volume: "37146.83 TON", price: 19.293, change: 12.43 },
+  const { get } = useAxios();
+  const fetchTradeData = () => {
+    // try {}
+    get("/coinmarket/price", {
+    }).then((res) => {
+      console.log(res);
+      if (res && res.data) {
+        const list = res.data.slice(0,20)
+        setTradeList(list)
+      }
+    }).catch(err=> {
+      console.log("coinmarketerror", err)
+    });
+  };
+
+
+  
+  const [tradeList, setTradeList] = useState([
+    { symbol: "BTC", quote: {usd: {volume_24h: 0, price: 0,percent_change_24h:0}}, price: 19.293, change: -90.43 },
   ]);
 
   const filterClick = (target) => {
@@ -34,6 +39,10 @@ const TokenList = () => {
     }
     setFilter({ target, direction });
   };
+
+  useEffect(() => {
+    fetchTradeData();
+  }, []);
 
   return (
     <div className="token-list flex-column">
@@ -72,12 +81,12 @@ const TokenList = () => {
           return (
             <div className="token-item" key={key}>
               <div className="token-info">
-                <div className="token-pair">{item.pair}</div>
-                <div className="token-volume">{item.volume}</div>
+                <div className="token-pair">{item.symbol}/USDT</div>
+                <div className="token-volume">{item.quote.usd.volume_24h.toFixed(0)}</div>
               </div>
-              <div className="token-price">{item.price}</div>
-              <div className={`${item.change < 0 ? "down" : "up"} token-change`}>
-                {item.change}%
+              <div className={`${item.quote.usd.percent_change_24h < 0 ? "down" : "up"} token-price`}>{item.quote.usd.price.toFixed(2)}</div>
+              <div className={`${item.quote.usd.percent_change_24h < 0 ? "down" : "up"} token-change`}>
+                {item.quote.usd.percent_change_24h.toFixed(2)}%
               </div>
             </div>
           );

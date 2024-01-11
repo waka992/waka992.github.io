@@ -8,8 +8,6 @@ import Box from "@mui/material/Box";
 import TokenList from "../TokenList/TokenList";
 import CustomTabPanel from "../CustomTabPanel/CustomTabPanel";
 
-
-
 const QuoteInfo = () => {
   const [index, setIndex] = React.useState(0);
 
