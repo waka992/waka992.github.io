@@ -89,6 +89,7 @@ const ClosePosition = (props: Props) => {
   };
 
   useEffect(() => {
+    console.log(props.item)
     if(props.item) {
       setAmount(props.item.quantity)
     }

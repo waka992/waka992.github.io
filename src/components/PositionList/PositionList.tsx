@@ -51,11 +51,13 @@ const PositionList = (props: Props) => {
   }
 
   const [positionOpen, setPositionOpen] = useState(false);
-  const positionDrawerOpen = useCallback((index) => {
+  const positionDrawerOpen = (index) => {
+    console.log("index", index)
+    console.log("index", tradeList)
     setSelectItem(index)
     setSelectItemObject(tradeList[index])
     setPositionOpen(true);
-  }, []);
+  }
   
   const handlePositionData = (data) => {
     console.log("websocket lastMessage:", data)
