@@ -190,10 +190,10 @@ const OrderPage = () => {
       reduceOnly
     };
     console.log(params);
+    setConfirmDrawerOpen(false);
     post("/exchange/OpenPerpetualOrder", params).then((res) => {
       console.log(res);
       toast.success("Order placed!");
-      setConfirmDrawerOpen(false);
       getBalance();
     });
 

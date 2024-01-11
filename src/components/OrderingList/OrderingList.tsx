@@ -14,24 +14,24 @@ const OrderingList = (props: Props) => {
   const { encrypt } = useEncrypt();
   const formatusd = useFormatUSD();
 
-  const [tradeList, setTradeList] = useState([
-    {
-      amount: 0,
-      filled: 0,
-      orderId: 0,
-      price: 0,
-      side: "Buy",
-      symbol: "BTCUSDT",
-      type: "limit",
-      leverage: 50,
-      pnl: -2.23,
-      roi: -7.15,
-      margin: 29.7,
-      marginRatio: 11.34,
-      entryPrice: 42987.6,
-      markPrice: 42987.7,
-      liqPrice: 42987.8,
-    },
+  const [tradeList, setTradeList] = useState<any>([
+    // {
+      // amount: 0,
+      // filled: 0,
+      // orderId: 0,
+      // price: 0,
+      // side: "Buy",
+      // symbol: "BTCUSDT",
+      // type: "limit",
+      // leverage: 50,
+      // pnl: -2.23,
+      // roi: -7.15,
+      // margin: 29.7,
+      // marginRatio: 11.34,
+      // entryPrice: 42987.6,
+      // markPrice: 42987.7,
+      // liqPrice: 42987.8,
+    // },
   ]);
 
   const cancelOrder = (id, sym) => {
@@ -80,7 +80,8 @@ const OrderingList = (props: Props) => {
 
   return (
     <div className="ordering-list flex-column">
-      {tradeList.map((item, index) => (
+      {tradeList.length !== 0 ?
+        tradeList.map((item, index) => (
         <div className="position-item" key={index}>
           <div className="token-info position-mb">
             <div
@@ -129,7 +130,8 @@ const OrderingList = (props: Props) => {
             </div>
           </div>
         </div>
-      ))}
+      ))
+    : null}
     </div>
   );
 };
